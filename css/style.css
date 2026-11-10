@@ -1,0 +1,106 @@
+/* A Quiet Place with God - styles */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap');
+:root{--pink:#f58ab3;--deep:#c94f80;--light:#ffe0ec;--pale:#fff4f8;--ink:#85465f}
+*{box-sizing:border-box}
+body{margin:0;padding:25px 12px;color:var(--ink);font-family:'Quicksand',sans-serif;background-color:#fff0f6;
+background-image:linear-gradient(45deg,#fbd9e7 25%,transparent 25%),linear-gradient(-45deg,#fbd9e7 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#fbd9e7 75%),linear-gradient(-45deg,transparent 75%,#fbd9e7 75%);
+background-size:48px 48px;background-position:0 0,0 24px,24px -24px,-24px 0}
+.site{max-width:900px;margin:auto;overflow:hidden;background:#f9a8c8;border:4px dashed #df6e9b;border-radius:25px;box-shadow:0 8px 25px #b9577a30}
+header{min-height:220px;display:grid;place-items:center;text-align:center;padding:25px 12px;background:repeating-linear-gradient(90deg,#fff 0 55px,#f77eaa 55px 110px)}
+.logo{font:700 clamp(30px,6vw,54px) 'Fredoka',sans-serif;color:#f47da9;-webkit-text-stroke:1.5px white;text-shadow:3px 4px #b94776;background:#fff0f6e8;border:3px solid #f18bb2;border-radius:28px;padding:12px 20px;transform:rotate(-2deg)}
+header p{font:600 15px 'Fredoka',sans-serif;color:#bd4e7c;text-shadow:1px 1px white}
+nav{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;padding:12px 8px 18px;background:#f9a8c8}
+.nav-item{border:0;padding:4px 2px;background:transparent;color:white;cursor:pointer;font:700 clamp(11px,2vw,17px) 'Fredoka',sans-serif;text-shadow:2px 2px #cb5985,-1px -1px #cb5985}
+.nav-item svg{display:block;width:min(100%,82px);height:83px;margin:5px auto 0;filter:drop-shadow(2px 3px 0 #b64e77);transition:transform .2s}
+.nav-item:hover svg,.nav-item.active svg{transform:translateY(-5px) rotate(-3deg)}
+.nav-item.active{color:#fff8fb}
+main{margin:0 14px;padding:18px;min-height:400px;background:white;border-radius:18px}
+.page{display:none;animation:appear .25s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+h2{font:700 23px 'Fredoka',sans-serif;text-align:center;color:white;background:var(--pink);border-radius:14px;padding:10px;margin:0 0 15px;text-shadow:1px 2px #c85b84}
+h3{font:700 18px 'Fredoka',sans-serif;color:#d65e8e}
+p{line-height:1.7}
+.panel{padding:18px;margin:12px 0;background:#fff5f9;border:2px solid #f7c1d5;border-radius:15px}
+.center{text-align:center}
+input,textarea,select{display:block;width:100%;margin:8px 0 13px;padding:12px;border:2px solid #f4bad0;border-radius:12px;background:white;color:var(--ink);font:500 14px 'Quicksand',sans-serif}
+textarea{min-height:95px;resize:vertical}
+button.action{background:var(--pink);color:white;border:0;padding:11px 18px;border-radius:20px;font:700 14px 'Fredoka',sans-serif;cursor:pointer}
+button.action:hover{background:var(--deep)}
+.home-welcome{padding:30px 15px;text-align:center;border-radius:16px;background:#fff1f7}
+.home-welcome .flower{font-size:35px}
+footer{padding:20px 8px;text-align:center;font:600 13px 'Fredoka',sans-serif;color:#9d4268}
+.item{background:white;border:2px solid #f7c1d5;border-radius:12px;padding:10px 14px;margin:9px 0}
+.item h4{margin:0 0 4px;font:600 16px 'Fredoka',sans-serif;color:#d65e8e;word-break:break-word}
+.item h4 a{color:inherit}
+.item p{margin:0;white-space:pre-wrap;line-height:1.5;word-break:break-word}
+.item.done{background:#fff0f6}
+.item.done h4::after{content:" ♡ done";font-size:13px}
+.item.done p{opacity:.65;text-decoration:line-through}
+.row{display:flex;gap:6px;margin-top:8px}
+.mini{border:0;background:#fbd9e7;color:#a8466f;border-radius:12px;padding:4px 11px;font:600 12px 'Fredoka',sans-serif;cursor:pointer}
+.mini:hover{background:#f7c1d5}
+.empty{text-align:center;opacity:.7;margin:10px 0 0}
+.msg{color:#c34f80;font:600 13px 'Fredoka',sans-serif;margin:8px 0 0;min-height:1em}
+@media(max-width:560px){body{padding:8px 4px}header{min-height:170px}nav{grid-template-columns:repeat(7,1fr);gap:2px;padding:10px 3px 12px}.nav-item{font-size:9px;line-height:1.1}.nav-item svg{height:34px;margin-top:3px}main{margin:0 8px;padding:12px}}
+
+/* Passcode screen and small helpers */
+[hidden]{display:none!important}
+.panel .action{margin:4px}
+#lock{display:none;position:fixed;inset:0;z-index:99;place-items:center;padding:16px;background:#fff0f6}
+html.locked #lock{display:grid}
+html.locked .site{display:none}
+.lockbox{width:100%;max-width:340px;text-align:center;background:white;border:3px dashed #df6e9b;border-radius:20px;padding:20px}
+
+/* Profiles and settings */
+.link{border:0;background:#fbd9e7;color:#a8466f;padding:8px 16px;border-radius:20px;font:600 13px 'Fredoka',sans-serif;cursor:pointer}
+.link:hover{background:#f7c1d5}
+a.mini{display:inline-block;margin:4px;padding:9px 15px;font-size:13px;text-decoration:none}
+.panel .mini{margin:4px}
+
+/* "with God" is part of the headline */
+.logo .with{display:block;font-size:.8em;line-height:1.1;margin-top:2px}
+.nav-item{min-width:0}
+.lock-name{margin:4px 0 8px;font:700 22px 'Fredoka',sans-serif;color:#f47da9;text-shadow:1px 2px #b94776;line-height:1.2}
+.item iframe{display:block;width:100%;height:152px;border:0;border-radius:12px;margin-top:8px}
+
+/* Round 2: one straight row of smaller icons, userbar, new controls */
+nav{grid-template-columns:repeat(7,1fr);gap:2px;padding:10px 4px 14px}
+.nav-item{font-size:clamp(9px,1.7vw,16px);line-height:1.1;min-width:0}
+.nav-item svg{width:min(100%,70px);height:clamp(36px,7vw,70px)}
+.userbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 14px;background:#fff0f6;color:#9d4268;font:600 13px 'Fredoka',sans-serif}
+.link{border:0;background:#fbd9e7;color:#a8466f;border-radius:20px;padding:8px 16px;font:600 13px 'Fredoka',sans-serif;cursor:pointer}
+.link:hover{background:#f7c1d5}
+.userbar .link{padding:3px 12px}
+.lbl{display:block;font:600 13px 'Fredoka',sans-serif;color:#d65e8e}
+input[type=color]{display:inline-block;width:90px;height:46px;padding:2px;cursor:pointer}
+input[type=checkbox]{display:inline-block;width:auto;margin:0 6px 0 0}
+input.mini-date{display:inline-block;width:auto;margin:0 6px;padding:4px 8px}
+#swatches{margin:4px 0 10px}
+#swatches button{width:30px;height:30px;margin:3px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #8d4561;cursor:pointer}
+.sp{display:block;width:100%;border:0;border-radius:12px;margin-top:8px}
+.item.done p{opacity:1;text-decoration:none}
+.item.done h4::after{content:none}
+html.dark body{background-color:#241820;background-image:none;--ink:#f3d9e4}
+html.dark main,html.dark .lockbox,html.dark .item{background:#2d1d26}
+html.dark #lock{background:#241820}
+html.dark .panel,html.dark .home-welcome{background:#382430;border-color:#6d3f55}
+html.dark .item{border-color:#6d3f55}
+html.dark input,html.dark textarea,html.dark select{background:#241820;color:#f3d9e4;border-color:#6d3f55}
+html.dark h3,html.dark .item h4,html.dark .lbl{color:#ffb3cf}
+html.dark footer,html.dark p{color:#f3d9e4}
+html.dark .mini,html.dark .link{background:#4a2c3b;color:#ffd1e2}
+html.dark .userbar{background:#382430;color:#f3d9e4}
+
+/* Drawer-style entries */
+.item summary{cursor:pointer;list-style:none}
+.item summary::-webkit-details-marker{display:none}
+.item summary h4::before{content:'▸ '}
+.item[open] summary h4::before{content:'▾ '}
+.item .peek{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:14px;opacity:.85}
+.item[open] .peek{display:none}
+.item .full{margin-top:6px}
+#list-bible,#list-calendar,#list-notes,#list-prayers,#list-prayers-done{max-height:460px;overflow-y:auto}
+
+.lockbox .note{font-size:13px;margin:6px 0 0}
+.lockbox .action{margin:4px 0}
