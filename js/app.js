@@ -1,9 +1,9 @@
 // A Quiet Place with God - scripts
 const $ = id => document.getElementById(id);
-const FIELDS = {bible:2, calendar:3, prayers:2, worship:2, notes:2};
+const FIELDS = {bible:2, calendar:3, prayers:3, worship:2, notes:2};
 const REQ = {bible:[0,1], calendar:[1,2], prayers:[0], worship:[1], notes:[0,1]};
 const NAMES = {bible:'study', calendar:'devotion', prayers:'prayer', worship:'song', notes:'note'};
-const DRAFTS = ['bible1','bible2','calendar1','calendar2','calendar3','prayers1','prayers2','worship1','worship2','notes1','notes2','sp-q'];
+const DRAFTS = ['bible1','bible2','calendar1','calendar2','calendar3','prayers1','prayers2','prayers3','worship1','worship2','notes1','notes2','sp-q'];
 const USERNAME = /^[\p{L}\p{N}._-]{3,20}$/u;
 
 // ---- Browser storage helpers (nothing leaves this browser) ----
@@ -35,53 +35,90 @@ function showPage(page, button) {
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-// ---- Verses: KJV shows the text (public domain); other versions are copyrighted, so they open on BibleGateway ----
-const VERSES = [
-  ["Draw nigh to God, and he will draw nigh to you.", "James 4:8"],
-  ["Be still, and know that I am God.", "Psalm 46:10"],
-  ["The Lord is my shepherd; I shall not want.", "Psalm 23:1"],
-  ["Casting all your care upon him; for he careth for you.", "1 Peter 5:7"],
-  ["Trust in the Lord with all thine heart.", "Proverbs 3:5"],
-  ["Come unto me, all ye that labour and are heavy laden, and I will give you rest.", "Matthew 11:28"]
-];
-let vi = 0;
+// ---- Bible: KJV and BBE are public domain, so their text is bundled in /data. NIV, ESV, NLT, NKJV are copyrighted, so they open on BibleGateway ----
+const BOOKS = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel", "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi", "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians", "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus", "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John", "3 John", "Jude", "Revelation"];
+const BUNDLED = {KJV:'data/kjv.json', BBE:'data/bbe.json'};
+const VERSES = [["Be still, and know that I am God: I will be exalted among the heathen, I will be exalted in the earth.", "Psalms", 46, 10, 0], ["The LORD is my shepherd; I shall not want.", "Psalms", 23, 1, 0], ["The LORD is my light and my salvation; whom shall I fear? the LORD is the strength of my life; of whom shall I be afraid?", "Psalms", 27, 1, 0], ["O taste and see that the LORD is good: blessed is the man that trusteth in him.", "Psalms", 34, 8, 0], ["Delight thyself also in the LORD ; and he shall give thee the desires of thine heart.", "Psalms", 37, 4, 0], ["He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty.", "Psalms", 91, 1, 0], ["Thy word is a lamp unto my feet, and a light unto my path.", "Psalms", 119, 105, 0], ["I will lift up mine eyes unto the hills, from whence cometh my help. My help cometh from the LORD , which made heaven and earth.", "Psalms", 121, 1, 2], ["I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.", "Psalms", 139, 14, 0], ["Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.", "Proverbs", 3, 5, 6], ["Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.", "Isaiah", 26, 3, 0], ["But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.", "Isaiah", 40, 31, 0], ["Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.", "Isaiah", 41, 10, 0], ["For I know the thoughts that I think toward you, saith the LORD , thoughts of peace, and not of evil, to give you an expected end.", "Jeremiah", 29, 11, 0], ["It is of the LORD’s mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.", "Lamentations", 3, 22, 23], ["Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.", "Joshua", 1, 9, 0], ["But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.", "Matthew", 6, 33, 0], ["Come unto me, all ye that labour and are heavy laden, and I will give you rest.", "Matthew", 11, 28, 0], ["For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.", "John", 3, 16, 0], ["Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.", "John", 14, 27, 0], ["And we know that all things work together for good to them that love God, to them who are the called according to his purpose.", "Romans", 8, 28, 0], ["And he said unto me, My grace is sufficient for thee: for my strength is made perfect in weakness. Most gladly therefore will I rather glory in my infirmities, that the power of Christ may rest upon me.", "2 Corinthians", 12, 9, 0], ["For by grace are ye saved through faith; and that not of yourselves: it is the gift of God:", "Ephesians", 2, 8, 0], ["Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God.", "Philippians", 4, 6, 0], ["I can do all things through Christ which strengtheneth me.", "Philippians", 4, 13, 0], ["Rejoice evermore. Pray without ceasing. In every thing give thanks: for this is the will of God in Christ Jesus concerning you.", "1 Thessalonians", 5, 16, 18], ["Now faith is the substance of things hoped for, the evidence of things not seen.", "Hebrews", 11, 1, 0], ["Draw nigh to God, and he will draw nigh to you. Cleanse your hands, ye sinners; and purify your hearts, ye double minded.", "James", 4, 8, 0], ["Casting all your care upon him; for he careth for you.", "1 Peter", 5, 7, 0], ["Teaching them to observe all things whatsoever I have commanded you: and, lo, I am with you alway, even unto the end of the world. Amen.", "Matthew", 28, 20, 0]];
+const bibleCache = {};
+const bible = async v => bibleCache[v] || (bibleCache[v] = await (await fetch(BUNDLED[v])).json());
+let vi = 0, vseq = 0;
 const version = () => LS.get(key('version')) || 'KJV';
 const passageUrl = (ref, ver) => 'https://www.biblegateway.com/passage/?search=' + encodeURIComponent(ref) + '&version=' + ver;
-function showVerse() {
-  const [text, ref] = VERSES[vi], ver = version(), link = $('vlink');
-  if (ver === 'KJV') {
-    $('verse').textContent = '"' + text + '"';
-    $('vref').textContent = ref + ' (KJV)';
-    link.hidden = true;
-  } else {
-    $('verse').textContent = ref;
-    $('vref').textContent = '';
-    link.href = passageUrl(ref, ver);
-    link.textContent = 'Read in ' + ver;
-    link.hidden = false;
-  }
+const refOf = v => v[1] + ' ' + v[2] + ':' + v[3] + (v[4] ? '-' + v[4] : '');
+async function showVerse() {
+  const v = VERSES[vi], ref = refOf(v), ver = version(), link = $('vlink'), my = ++vseq;
+  $('rv').value = ver;
   $('read-btn').textContent = 'Read in ' + ver + ' ♡';
+  link.hidden = true;
+  $('vref').textContent = ref + ' (' + ver + ')';
+  let text = ver === 'KJV' ? v[0] : null;
+  if (!text && BUNDLED[ver]) {
+    try { const d = await bible(ver); text = d[BOOKS.indexOf(v[1])].chapters[v[2] - 1].slice(v[3] - 1, v[4] || v[3]).join(' '); } catch (e) {}
+  }
+  if (my !== vseq) return;
+  if (text) $('verse').textContent = '"' + text + '"';
+  else { $('verse').textContent = ref; $('vref').textContent = ''; link.href = passageUrl(ref, ver); link.textContent = 'Read in ' + ver; link.hidden = false; }
 }
-function nextVerse() { vi = (vi + 1) % VERSES.length; showVerse(); }
-function setVersion(v) { LS.set(key('version'), v); showVerse(); }
+function nextVerse() { vi = (vi + 1 + Math.floor(Math.random() * (VERSES.length - 1))) % VERSES.length; showVerse(); }
+function setVersion(v) { LS.set(key('version'), v); $('ver').value = v; showVerse(); }
 function readPassage() {
   const ref = $('bible1').value.trim(), m = $('msg-bible');
   if (!ref) { m.textContent = 'Type a passage first, like Psalm 23.'; return; }
   m.textContent = '';
   window.open(passageUrl(ref, version()), '_blank', 'noopener');
 }
+async function readBible(book, ch) {
+  if (book !== undefined) { $('bk').value = book; $('bch').value = ch; $('bvs').value = ''; }
+  const bi = +$('bk').value, c = +$('bch').value || 1, vs = $('bvs').value.trim(), ver = version(), out = $('bible-out');
+  const ref = BOOKS[bi] + ' ' + c + (vs ? ':' + vs : '');
+  out.textContent = '';
+  if (!BUNDLED[ver]) {
+    const a = document.createElement('a'); a.href = passageUrl(ref, ver); a.target = '_blank'; a.rel = 'noopener noreferrer'; a.className = 'mini';
+    a.textContent = 'Open ' + ref + ' in the ' + ver + ' on BibleGateway';
+    out.append('The ' + ver + ' is copyrighted, so it opens on BibleGateway. ', a);
+    return;
+  }
+  out.textContent = 'Loading…';
+  try {
+    const d = await bible(ver), chap = d[bi].chapters[c - 1];
+    if (!chap) { out.textContent = BOOKS[bi] + ' has ' + d[bi].chapters.length + ' chapters.'; return; }
+    const m = /^(\d+)(?:\s*-\s*(\d+))?$/.exec(vs), from = m ? +m[1] : 1, to = m ? +(m[2] || m[1]) : chap.length;
+    out.textContent = '';
+    const h = document.createElement('h4'), box = document.createElement('div'), nav = document.createElement('div');
+    h.textContent = ref + ' (' + ver + ')'; box.className = 'chap'; nav.className = 'row';
+    chap.forEach((t, i) => {
+      if (i + 1 < from || i + 1 > to) return;
+      const s = document.createElement('span'), n = document.createElement('sup');
+      n.textContent = i + 1; s.append(n, ' ' + t + ' '); box.appendChild(s);
+    });
+    const btn = (label, fn) => { const b = document.createElement('button'); b.className = 'mini'; b.textContent = label; b.onclick = fn; nav.appendChild(b); };
+    if (c > 1) btn('◀ Chapter ' + (c - 1), () => readBible(bi, c - 1));
+    if (c < d[bi].chapters.length) btn('Chapter ' + (c + 1) + ' ▶', () => readBible(bi, c + 1));
+    btn('Use this passage ♡', () => { $('bible1').value = ref; saveDraft(); $('msg-bible').textContent = 'Added to "Today\'s Reading" below ♡'; });
+    out.append(h, box, nav);
+  } catch (e) { out.textContent = "Couldn't load the Bible text. Check your connection and try again."; }
+}
 
-// ---- Spotify: pasted links play inside the page ----
+// ---- Songs: Spotify and YouTube links play inside the page ----
 const spotify = u => {
   const m = /^https:\/\/open\.spotify\.com\/(?:intl-[a-z]+\/)?(track|album|playlist|episode|show|artist)\/([A-Za-z0-9]+)/.exec(u);
   return m ? {src:'https://open.spotify.com/embed/' + m[1] + '/' + m[2], h:/^(track|episode)$/.test(m[1]) ? 152 : 352} : null;
 };
-function spotifySearch() {
+const youtube = u => {
+  let m = /^https?:\/\/(?:www\.|m\.|music\.)?(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/.exec(u);
+  if (m) return {src:'https://www.youtube-nocookie.com/embed/' + m[1], yt:true};
+  m = /^https?:\/\/(?:www\.|m\.|music\.)?youtube\.com\/(?:playlist|watch)\?(?:[^#]*&)?list=([\w-]+)/.exec(u);
+  return m ? {src:'https://www.youtube-nocookie.com/embed/videoseries?list=' + m[1], yt:true} : null;
+};
+const embed = u => spotify(u) || youtube(u);
+function songSearch(base, label) {
   const q = $('sp-q').value.trim(), m = $('msg-worship');
   if (!q) { m.textContent = 'Type a song title first.'; return; }
-  m.textContent = 'Copy the song link from Spotify, then paste it above ♡';
-  window.open('https://open.spotify.com/search/' + encodeURIComponent(q), '_blank', 'noopener');
+  m.textContent = 'Copy the song link from ' + label + ', then paste it above ♡';
+  window.open(base + encodeURIComponent(q), '_blank', 'noopener');
 }
+const spotifySearch = () => songSearch('https://open.spotify.com/search/', 'Spotify');
+const youtubeSearch = () => songSearch('https://www.youtube.com/results?search_query=', 'YouTube');
 
 // ---- Saved entries (per account) ----
 const load = k => { try { return JSON.parse(LS.get(key(k))) || []; } catch (e) { return []; } };
@@ -115,13 +152,15 @@ function add(k) {
   msg.textContent = 'Saved ♡';
   render(k);
 }
+const STICKERS = ['🌸','🎀','🧸','⭐','🌷','🕊️','✨','🦋','💌','☁️','🐈','🍓'];
+function patch(k, id, fn) { const a = load(k), it = a.find(x => x.id === id); if (it) fn(it); save(k, a); render(k); }
 function setPrayer(k, id, done, date) {
   const a = load(k), it = a.find(x => x.id === id);
   if (it) { it.done = done; if (done) it.ad = date; else delete it.ad; }
-  save(k, a); render(k);
+  save(k, a); render(k); closeSheet();
 }
 function remove(k, id) {
-  if (confirm('Delete this ' + NAMES[k] + '? This cannot be undone.')) { save(k, load(k).filter(x => x.id !== id)); render(k); }
+  if (confirm('Delete this ' + NAMES[k] + '? This cannot be undone.')) { save(k, load(k).filter(x => x.id !== id)); render(k); closeSheet(); }
 }
 function answerForm(r, k, id) {
   r.textContent = '';
@@ -131,53 +170,78 @@ function answerForm(r, k, id) {
   r.append('Answered on ', d, s);
 }
 
+function describe(k, it) {
+  const [a, b, c] = it.v;
+  if (k === 'bible' || k === 'notes') return {title: a || 'Untitled', text: b};
+  if (k === 'calendar') return {title: (b || 'Devotion') + (a ? ' \u00b7 ' + fmt(a) : ''), text: c};
+  return {title: c || 'Prayer', text: a, meta: 'Requested' + (b ? ' ' + fmt(b) : '') + (it.done ? ' \u00b7 \u2713 Answered ' + fmt(it.ad) : '')};
+}
 function card(k, it) {
-  const [a, b, c] = it.v, w = k === 'worship';
-  const d = document.createElement(w ? 'div' : 'details');
-  d.className = 'item' + (it.done ? ' done' : '');
-  const h = document.createElement('h4');
-  let text = '';
-  if (k === 'bible' || k === 'notes') { h.textContent = a || 'Untitled'; text = b; }
-  else if (k === 'calendar') { h.textContent = (b || 'Devotion') + (a ? ' · ' + fmt(a) : ''); text = c; }
-  else if (k === 'prayers') {
-    h.textContent = '🙏 Requested' + (b ? ' ' + fmt(b) : '') + (it.done ? ' · ✓ Answered ' + fmt(it.ad) : '');
-    text = a;
-  } else {
-    const l = document.createElement('a');
-    l.href = b; l.target = '_blank'; l.rel = 'noopener noreferrer'; l.textContent = '♪ ' + (a || b);
-    h.appendChild(l);
-  }
-  if (w) d.appendChild(h);
-  else { // drawer: title + short preview; click to open the full text
-    const s = document.createElement('summary');
-    s.appendChild(h);
-    if (text) {
-      const pk = document.createElement('p'); pk.className = 'peek'; pk.textContent = text; s.appendChild(pk);
-      const f = document.createElement('p'); f.className = 'full'; f.textContent = text;
-      d.appendChild(s); d.appendChild(f);
-    } else d.appendChild(s);
-  }
+  const w = k === 'worship', d = document.createElement('div');
+  d.className = 'item' + (w ? '' : ' rc') + (it.done ? ' done' : '');
   if (w) {
-    const sp = spotify(b);
+    const h = document.createElement('h4'), l = document.createElement('a');
+    l.href = it.v[1]; l.target = '_blank'; l.rel = 'noopener noreferrer'; l.textContent = '\u266a ' + (it.v[0] || it.v[1]);
+    h.appendChild(l); d.appendChild(h);
+    const sp = embed(it.v[1]);
     if (sp) {
       const f = document.createElement('iframe');
-      f.src = sp.src; f.className = 'sp'; f.style.height = sp.h + 'px'; f.loading = 'lazy';
+      f.src = sp.src; f.className = 'sp' + (sp.yt ? ' yt' : ''); if (!sp.yt) f.style.height = sp.h + 'px'; f.loading = 'lazy'; f.allowFullscreen = true;
       f.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
       d.appendChild(f);
     }
+    const r = document.createElement('div'); r.className = 'row';
+    const x = document.createElement('button'); x.className = 'mini'; x.textContent = 'Delete';
+    x.onclick = () => remove(k, it.id); r.appendChild(x); d.appendChild(r);
+    return d;
   }
-  const r = document.createElement('div'); r.className = 'row';
+  const {title, text, meta} = describe(k, it); // compact row: tap it to open the drawer
+  const main = document.createElement('div'); main.className = 'rc-main';
+  const h = document.createElement('h4'); h.textContent = (it.st ? it.st + ' ' : '') + title; main.appendChild(h);
+  if (meta) { const sm = document.createElement('small'); sm.textContent = meta; main.appendChild(sm); }
+  if (text) { const pk = document.createElement('p'); pk.className = 'peek'; pk.textContent = text; main.appendChild(pk); }
+  const t = document.createElement('button'); t.className = 'mini trash'; t.title = 'Delete'; t.setAttribute('aria-label', 'Delete'); t.textContent = '\ud83d\uddd1';
+  t.onclick = e => { e.stopPropagation(); remove(k, it.id); };
+  d.append(main, t);
+  d.tabIndex = 0; d.setAttribute('role', 'button');
+  d.onclick = () => openSheet(k, it);
+  d.onkeydown = e => { if (e.key === 'Enter' && e.target === d) openSheet(k, it); };
+  return d;
+}
+let sheetTimer = null;
+function openSheet(k, it) {
+  const {title, text, meta} = describe(k, it), r = $('sheet-actions'), s = $('sheet');
+  $('sheet-title').textContent = (it.st ? it.st + ' ' : '') + title;
+  $('sheet-body').textContent = (meta ? meta + '\n\n' : '') + (text || '(nothing written)');
+  let st = $('sheet-stk');
+  if (!st) { st = document.createElement('div'); st.id = 'sheet-stk'; r.parentNode.insertBefore(st, r); }
+  st.textContent = '';
+  STICKERS.forEach(e => {
+    const b = document.createElement('button'); b.textContent = e; b.className = it.st === e ? 'on' : ''; b.title = 'Sticker / bookmark';
+    b.onclick = () => { patch(k, it.id, x => { x.st = x.st === e ? '' : e; }); openSheet(k, load(k).find(x => x.id === it.id)); };
+    st.appendChild(b);
+  });
+  r.textContent = '';
   if (k === 'prayers') {
     const t = document.createElement('button'); t.className = 'mini';
-    t.textContent = it.done ? 'Back to requests' : '✓ Mark answered';
+    t.textContent = it.done ? 'Back to requests' : '\u2713 Mark answered';
     t.onclick = () => it.done ? setPrayer(k, it.id, false) : answerForm(r, k, it.id);
     r.appendChild(t);
   }
-  const x = document.createElement('button'); x.className = 'mini'; x.textContent = 'Delete';
-  x.onclick = () => remove(k, it.id); r.appendChild(x);
-  d.appendChild(r);
-  return d;
+  const x = document.createElement('button'); x.className = 'mini'; x.textContent = 'Delete'; x.onclick = () => remove(k, it.id);
+  const c = document.createElement('button'); c.className = 'mini'; c.textContent = 'Close'; c.onclick = closeSheet;
+  r.append(x, c);
+  clearTimeout(sheetTimer);
+  s.classList.add('show');
+  setTimeout(() => s.classList.add('open'), 20);
 }
+function closeSheet() {
+  const s = $('sheet');
+  s.classList.remove('open');
+  clearTimeout(sheetTimer);
+  sheetTimer = setTimeout(() => s.classList.remove('show'), 300);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 function fill(el, items, k, empty) {
   el.textContent = '';
   if (!items.length) { const e = document.createElement('p'); e.className = 'empty'; e.textContent = empty; el.appendChild(e); }
@@ -214,6 +278,7 @@ function refreshSettings() {
   $('set-display').value = u.display || u.name;
   $('set-user').value = u.name;
   $('ver').value = version();
+  $('cat-on').checked = catOn();
   $('theme-color').value = t.c;
   $('theme-dark').checked = !!t.dark;
   let n = 0;
@@ -333,16 +398,21 @@ function importAccount(input) {
       const d = JSON.parse(r.result), a = d.account;
       if (d.app !== 'quiet-place' || !a || !a.id || !a.name || !d.data) throw 0;
       const same = users().find(u => idOf(u) === a.id);
-      if (!same && byName(a.name)) { m.textContent = 'The username "' + a.name + '" is already used on this browser.'; return; }
+      let name = a.name;
+      if (!same && byName(name)) {
+        let n = 2; while (byName(a.name + n)) n++;
+        name = a.name + n;
+        if (!confirm('This browser already has a different account named "' + a.name + '". Restore the file\'s account as "' + name + '" instead?')) return;
+      }
       if (same && !confirm('This account is already here. Replace its entries with the ones in the file?')) return;
-      saveUsers(users().filter(u => idOf(u) !== a.id).concat({id:a.id, name:a.name, display:a.display || a.name, h:a.h || null}));
+      saveUsers(users().filter(u => idOf(u) !== a.id).concat({id:a.id, name, display:a.display || a.name, h:a.h || null}));
       const prev = uid; uid = a.id;
       Object.keys(FIELDS).forEach(k => { if (Array.isArray(d.data[k])) save(k, d.data[k]); });
       if (d.theme) LS.set(key('theme'), JSON.stringify(d.theme));
       if (d.version) LS.set(key('version'), d.version);
       uid = prev;
       showLogin(a.id);
-      m.textContent = 'Account found ♡ Enter your passcode to log in.';
+      m.textContent = 'Account found' + (name !== a.name ? ' as "' + name + '"' : '') + ' ♡ Enter your passcode to log in.';
     } catch (e) { m.textContent = "That doesn't look like a Quiet Place backup file."; }
     input.value = '';
   };
@@ -375,7 +445,43 @@ async function createProfile() {
   ['new-display', 'new-name', 'new-pass'].forEach(i => { $(i).value = ''; });
   startSession(id);
 }
+// ---- Username warning, cat friend and cat cursor ----
+function checkName(id, msgId) {
+  const v = $(id).value.trim(), o = v && byName(v);
+  $(msgId).textContent = o && idOf(o) !== uid ? '⚠ That username is already taken on this browser. Try another one.' : '';
+}
+const catOn = () => LS.get('qp_cat') !== '0';
+const setCatClass = () => document.documentElement.classList.toggle('nocat', !catOn());
+function setCat() { LS.set('qp_cat', $('cat-on').checked ? '1' : '0'); setCatClass(); }
+const cat = {x:0, y:0, tx:0, ty:0, f:1, seen:false};
+function moveCat(e) { // the cat only walks on the tiles beside the site, never over the content
+  const el = $('cat'), r = document.querySelector('.site').getBoundingClientRect(), W = innerWidth, left = r.left, right = W - r.right;
+  if (!catOn() || Math.max(left, right) < 70) { el.style.display = 'none'; return; }
+  const useLeft = left >= 70 && (e.clientX < W / 2 || right < 70);
+  cat.tx = useLeft ? Math.min(Math.max(e.clientX - 20, 4), left - 48) : Math.min(Math.max(e.clientX - 20, r.right + 6), W - 46);
+  cat.ty = Math.min(Math.max(e.clientY - 18, 0), innerHeight - 44);
+  if (!cat.seen) { cat.seen = true; cat.x = cat.tx; cat.y = cat.ty; }
+  el.style.display = 'block';
+}
+function tickCat() {
+  const dx = cat.tx - cat.x;
+  cat.x += dx * .1; cat.y += (cat.ty - cat.y) * .1;
+  if (Math.abs(dx) > .5) cat.f = dx > 0 ? -1 : 1;
+  $('cat').style.transform = 'translate(' + cat.x + 'px,' + cat.y + 'px) scaleX(' + cat.f + ')';
+  requestAnimationFrame(tickCat);
+}
+function initExtras() {
+  const bk = $('bk');
+  BOOKS.forEach((n, i) => { const o = document.createElement('option'); o.value = i; o.textContent = n; bk.appendChild(o); });
+  $('rv').innerHTML = $('ver').innerHTML;
+  setCatClass();
+  if (matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion:reduce)').matches) {
+    document.addEventListener('mousemove', moveCat);
+    requestAnimationFrame(tickCat);
+  }
+}
 function boot() {
+  initExtras();
   const sw = $('swatches');
   if (!sw.children.length) ['#f58ab3', '#b79cf0', '#6fb7f2', '#a8d93f', '#f4a261', '#e86a6a'].forEach(c => {
     const b = document.createElement('button'); b.style.background = c; b.title = c; b.onclick = () => setTheme(c); sw.appendChild(b);
