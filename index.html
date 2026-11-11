@@ -7,9 +7,9 @@
 <meta name="description" content="A quiet little corner to spend time with God.">
 <meta name="theme-color" content="#f9a8c8">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌷</text></svg>">
-<script>function applyTheme(t){try{t=t||{};var c=t.c||'#f58ab3',R=function(i){return parseInt(c.substr(i,2),16)/255},H=function(r,g,b){var x=Math.max(r,g,b),n=Math.min(r,g,b),d=x-n,h=0;if(d){h=x==r?((g-b)/d)%6:x==g?(b-r)/d+2:(r-g)/d+4;h*=60;if(h<0)h+=360}return[h,(x+n)/2,d]},k=H(R(1),R(3),R(5)),s=k[2]?k[2]/(1-Math.abs(2*k[1]-1)):0,B=[245/255,138/255,179/255],best=0,bd=999,m=function(u,v,w){return Math.min(1,Math.max(0,B[0]*u+B[1]*v+B[2]*w))};for(var a=0;a<360;a++){var q=a*Math.PI/180,co=Math.cos(q),si=Math.sin(q),hh=H(m(.213+co*.787-si*.213,.715-co*.715-si*.715,.072-co*.072+si*.928),m(.213-co*.213+si*.143,.715+co*.285+si*.14,.072-co*.072-si*.283),m(.213-co*.213-si*.787,.715-co*.715+si*.715,.072+co*.928+si*.072))[0],df=Math.abs(hh-k[0]);df=Math.min(df,360-df);if(df<bd){bd=df;best=a}}var e=document.documentElement;e.style.filter=c.toLowerCase()=='#f58ab3'?'':'hue-rotate('+best+'deg) saturate('+Math.min(1.3,Math.max(.15,s/.84)).toFixed(2)+')';e.classList.toggle('dark',!!t.dark)}catch(z){}}
+<script>function applyTheme(t){try{t=t||{};var c=t.c||'#f58ab3',r=parseInt(c.substr(1,2),16)/255,g=parseInt(c.substr(3,2),16)/255,b=parseInt(c.substr(5,2),16)/255,x=Math.max(r,g,b),n=Math.min(r,g,b),d=x-n,h=0;if(d){h=x==r?((g-b)/d)%6:x==g?(b-r)/d+2:(r-g)/d+4;h*=60;if(h<0)h+=360}var l=(x+n)/2,s=d?d/(1-Math.abs(2*l-1)):0,e=document.documentElement,bp=c.toLowerCase()=='#f58ab3';e.style.setProperty('--hue',bp?337:Math.round(h));e.style.setProperty('--sat',bp?1:Math.min(1.25,Math.max(.15,s/.87)).toFixed(2));e.style.filter='';e.classList.toggle('dark',!!t.dark)}catch(z){}}
 try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('locked');applyTheme(JSON.parse(localStorage.getItem('qp_theme')||'null'))}catch(e){document.documentElement.classList.add('locked')}</script>
-<link rel="stylesheet" href="css/style.css?v=5">
+<link rel="stylesheet" href="css/style.css?v=8">
 </head>
 <body>
 <div id="lock">
@@ -31,7 +31,7 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
     </div>
     <div id="create-form" hidden>
       <input id="new-display" placeholder="Your name (shown in the site)" maxlength="30" autocomplete="off">
-      <input id="new-name" placeholder="Choose a username" maxlength="20" autocomplete="off">
+      <input id="new-name" placeholder="Choose a username" maxlength="20" autocomplete="off" oninput="checkName('new-name','msg-lock')">
       <input id="new-pass" type="password" placeholder="Passcode (4+ characters)" autocomplete="new-password" onkeydown="if(event.key==='Enter')createProfile()">
       <button class="action" onclick="createProfile()">Create account ♡</button>
       <p><button class="link" onclick="showLogin()">I already have an account</button></p>
@@ -40,6 +40,7 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
     <p class="msg" id="msg-lock"></p>
   </div>
 </div>
+<div id="cat" aria-hidden="true">🐈</div>
 <div class="site">
 <header>
   <div>
@@ -53,32 +54,32 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
   <button class="nav-item active" onclick="showPage('home',this)">
     Home
     <svg viewBox="0 0 100 90">
-      <rect x="12" y="29" width="76" height="55" rx="5" fill="#ffb6d0" stroke="#8d4561" stroke-width="3"/>
-      <path d="M8 30 L50 5 L92 30Z" fill="#fff" stroke="#8d4561" stroke-width="3"/>
-      <path d="M12 28 H88 V43 Q75 56 62 43 Q50 56 38 43 Q25 56 12 43Z" fill="#fff" stroke="#8d4561" stroke-width="3"/>
-      <path d="M12 29 H28 V46 Q12 53 12 40Z M44 29 H60 V46 Q44 53 44 40Z M76 29 H88 V40 Q76 53 76 46Z" fill="#f47fa9"/>
-      <rect x="22" y="56" width="20" height="28" rx="3" fill="#fff" stroke="#8d4561" stroke-width="3"/>
-      <circle cx="36" cy="69" r="2" fill="#8d4561"/>
-      <rect x="54" y="55" width="24" height="17" fill="#fff" stroke="#8d4561" stroke-width="3"/>
+      <rect x="12" y="29" width="76" height="55" rx="5" stroke-width="3" style="fill:hsl(calc(var(--hue,337) + 2) calc(var(--sat,1) * 100.0%) 85.7%);stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <path d="M8 30 L50 5 L92 30Z" fill="#fff" stroke-width="3" style="stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <path d="M12 28 H88 V43 Q75 56 62 43 Q50 56 38 43 Q25 56 12 43Z" fill="#fff" stroke-width="3" style="stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <path d="M12 29 H28 V46 Q12 53 12 40Z M44 29 H60 V46 Q44 53 44 40Z M76 29 H88 V40 Q76 53 76 46Z" style="fill:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 84.2%) 72.7%)"/>
+      <rect x="22" y="56" width="20" height="28" rx="3" fill="#fff" stroke-width="3" style="stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <circle cx="36" cy="69" r="2" style="fill:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <rect x="54" y="55" width="24" height="17" fill="#fff" stroke-width="3" style="stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
     </svg>
   </button>
   <button class="nav-item" onclick="showPage('bible',this)">
     Bible Study
     <svg viewBox="0 0 100 90">
-      <path d="M12 20 Q30 5 48 24 L50 80 Q30 63 12 77Z" fill="#fff1f6" stroke="#8d4561" stroke-width="3"/>
-      <path d="M50 24 Q70 5 88 20 L88 77 Q68 63 50 80Z" fill="#ffb5d0" stroke="#8d4561" stroke-width="3"/>
-      <path d="M50 24 V80" stroke="#8d4561" stroke-width="3"/>
-      <path d="M34 10 V33 M23 21 H45" stroke="#e86e9d" stroke-width="5" stroke-linecap="round"/>
-      <path d="M65 35 H79 M65 44 H79 M65 53 H79" stroke="#d66b91" stroke-width="2"/>
+      <path d="M12 20 Q30 5 48 24 L50 80 Q30 63 12 77Z" stroke-width="3" style="fill:hsl(calc(var(--hue,337) + 2) calc(var(--sat,1) * 100.0%) 97.3%);stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <path d="M50 24 Q70 5 88 20 L88 77 Q68 63 50 80Z" stroke-width="3" style="fill:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 100.0%) 85.5%);stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <path d="M50 24 V80" stroke-width="3" style="stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <path d="M34 10 V33 M23 21 H45" stroke-width="5" stroke-linecap="round" style="stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 72.6%) 67.1%)"/>
+      <path d="M65 35 H79 M65 44 H79 M65 53 H79" stroke-width="2" style="stroke:hsl(calc(var(--hue,337) + 2) calc(var(--sat,1) * 56.6%) 62.9%)"/>
     </svg>
   </button>
   <button class="nav-item" onclick="showPage('calendar',this)">
     Devotions
     <svg viewBox="0 0 100 90">
-      <rect x="10" y="18" width="80" height="65" rx="7" fill="#fff0f6" stroke="#8d4561" stroke-width="3"/>
-      <rect x="10" y="18" width="80" height="18" rx="5" fill="#f58ab3"/>
-      <path d="M28 9 V27 M50 9 V27 M72 9 V27" stroke="#8d4561" stroke-width="5" stroke-linecap="round"/>
-      <g fill="#f5a9c5">
+      <rect x="10" y="18" width="80" height="65" rx="7" stroke-width="3" style="fill:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 100.0%) 97.1%);stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <rect x="10" y="18" width="80" height="18" rx="5" style="fill:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 84.3%) 75.1%)"/>
+      <path d="M28 9 V27 M50 9 V27 M72 9 V27" stroke-width="5" stroke-linecap="round" style="stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <g style="fill:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 79.2%) 81.2%)">
         <rect x="20" y="44" width="12" height="10"/><rect x="39" y="44" width="12" height="10"/><rect x="58" y="44" width="12" height="10"/>
         <rect x="20" y="61" width="12" height="10"/><rect x="39" y="61" width="12" height="10"/><rect x="58" y="61" width="12" height="10"/>
       </g>
@@ -87,40 +88,40 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
   <button class="nav-item" onclick="showPage('prayers',this)">
     Prayers
     <svg viewBox="0 0 100 90">
-      <path d="M50 80 C8 55 5 30 25 19 C38 11 48 23 50 31 C59 12 81 13 89 30 C99 52 70 72 50 80Z" fill="#ffb9d2" stroke="#8d4561" stroke-width="3"/>
-      <path d="M39 43 Q50 25 61 43 Q50 60 39 43Z" fill="#fff2f7" stroke="#8d4561" stroke-width="2"/>
-      <path d="M50 39 V54 M43 46 H57" stroke="#d65c8c" stroke-width="2"/>
+      <path d="M50 80 C8 55 5 30 25 19 C38 11 48 23 50 31 C59 12 81 13 89 30 C99 52 70 72 50 80Z" stroke-width="3" style="fill:hsl(calc(var(--hue,337) + 2) calc(var(--sat,1) * 100.0%) 86.3%);stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <path d="M39 43 Q50 25 61 43 Q50 60 39 43Z" stroke-width="2" style="fill:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 100.0%) 97.5%);stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <path d="M50 39 V54 M43 46 H57" stroke-width="2" style="stroke:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 59.8%) 60.0%)"/>
     </svg>
   </button>
   <button class="nav-item" onclick="showPage('worship',this)">
     Worship
     <svg viewBox="0 0 100 90">
-      <path d="M20 65 V22 Q20 12 30 15 L79 26 V66" fill="#fff1f6" stroke="#8d4561" stroke-width="4"/>
-      <circle cx="18" cy="69" r="11" fill="#f58ab3" stroke="#8d4561" stroke-width="3"/>
-      <circle cx="77" cy="72" r="11" fill="#f58ab3" stroke="#8d4561" stroke-width="3"/>
-      <path d="M30 15 V37 L79 48" stroke="#8d4561" stroke-width="3" fill="none"/>
-      <path d="M43 6 L48 0 M61 10 L67 4" stroke="#e875a0" stroke-width="3"/>
+      <path d="M20 65 V22 Q20 12 30 15 L79 26 V66" stroke-width="4" style="fill:hsl(calc(var(--hue,337) + 2) calc(var(--sat,1) * 100.0%) 97.3%);stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <circle cx="18" cy="69" r="11" stroke-width="3" style="fill:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 84.3%) 75.1%);stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <circle cx="77" cy="72" r="11" stroke-width="3" style="fill:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 84.3%) 75.1%);stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <path d="M30 15 V37 L79 48" stroke-width="3" fill="none" style="stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <path d="M43 6 L48 0 M61 10 L67 4" stroke-width="3" style="stroke:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 71.4%) 68.4%)"/>
     </svg>
   </button>
   <button class="nav-item" onclick="showPage('notes',this)">
     My Notes
     <svg viewBox="0 0 100 90">
-      <rect x="20" y="10" width="60" height="73" rx="6" fill="#fff" stroke="#8d4561" stroke-width="3" transform="rotate(-5 50 45)"/>
-      <path d="M34 30 H69 M33 43 H69 M32 56 H61" stroke="#e77ba4" stroke-width="3" stroke-linecap="round"/>
-      <path d="M75 9 L87 19 L52 69 L40 72 L42 60Z" fill="#f7a8c6" stroke="#8d4561" stroke-width="3"/>
+      <rect x="20" y="10" width="60" height="73" rx="6" fill="#fff" stroke-width="3" transform="rotate(-5 50 45)" style="stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
+      <path d="M34 30 H69 M33 43 H69 M32 56 H61" stroke-width="3" stroke-linecap="round" style="stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 69.2%) 69.4%)"/>
+      <path d="M75 9 L87 19 L52 69 L40 72 L42 60Z" stroke-width="3" style="fill:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 83.2%) 81.4%);stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)"/>
     </svg>
   </button>
   <button class="nav-item" onclick="showPage('settings',this)">
     Settings
     <svg viewBox="0 0 100 90">
-      <g transform="translate(50 47)" stroke="#8d4561" stroke-width="3">
-        <g fill="#f58ab3">
+      <g transform="translate(50 47)" stroke-width="3" style="stroke:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%)">
+        <g style="fill:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 84.3%) 75.1%)">
           <rect x="-7" y="-36" width="14" height="72" rx="4"/>
           <rect x="-7" y="-36" width="14" height="72" rx="4" transform="rotate(45)"/>
           <rect x="-7" y="-36" width="14" height="72" rx="4" transform="rotate(90)"/>
           <rect x="-7" y="-36" width="14" height="72" rx="4" transform="rotate(135)"/>
         </g>
-        <circle r="26" fill="#ffb5d0"/>
+        <circle r="26" style="fill:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 100.0%) 85.5%)"/>
         <circle r="10" fill="#fff"/>
       </g>
     </svg>
@@ -147,6 +148,15 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
 
   <section class="page" id="bible">
     <h2>📖 Bible Study Corner</h2>
+    <div class="panel">
+      <h3>Open a Bible</h3>
+      <select id="rv" onchange="setVersion(this.value)"></select>
+      <select id="bk" onchange="$('bch').value=1;$('bvs').value=''"></select>
+      <input id="bch" type="number" min="1" value="1" placeholder="Chapter">
+      <input id="bvs" placeholder="Verses (optional, example 1-6)">
+      <button class="action" onclick="readBible()">Read ♡</button>
+      <div id="bible-out"></div>
+    </div>
     <div class="panel">
       <h3>Today's Reading</h3>
       <input id="bible1" placeholder="Example: Psalm 23">
@@ -179,6 +189,7 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
       <h3>New prayer request</h3>
       <label class="lbl">Date of this request</label>
       <input id="prayers2" type="date">
+      <input id="prayers3" placeholder="Title of this prayer (example: For Lola's health)" maxlength="60">
       <textarea id="prayers1" placeholder="Dear God..."></textarea>
       <button class="action" onclick="add('prayers')">Save Prayer ♡</button>
       <p class="msg" id="msg-prayers"></p>
@@ -193,13 +204,15 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
     <h2>🎵 Worship Corner</h2>
     <div class="panel center">
       <h3>Songs for a quiet moment</h3>
-      <p>Paste a Spotify link and it plays right here ♡</p>
+      <p>Paste a Spotify or YouTube link and it plays right here ♡</p>
       <input id="worship1" placeholder="Song or playlist name (optional)">
-      <input id="worship2" placeholder="Paste a Spotify link (https://open.spotify.com/...)">
+      <input id="worship2" placeholder="Paste a Spotify or YouTube link">
       <button class="action" onclick="add('worship')">Add Song</button>
       <p class="msg" id="msg-worship"></p>
       <input id="sp-q" placeholder="Don't have a link? Type a song title">
       <button class="mini" onclick="spotifySearch()">Search on Spotify</button>
+      <button class="mini" onclick="youtubeSearch()">Search on YouTube</button>
+      <p class="note">YouTube songs play in full for everyone. Spotify plays full songs only for people logged in to Spotify; otherwise you get a 30-second preview.</p>
     </div>
     <div id="list-worship"></div>
   </section>
@@ -224,7 +237,7 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
       <button class="action" onclick="saveName()">Save name</button>
       <p class="msg" id="msg-name"></p>
       <label class="lbl">Username (used to log in)</label>
-      <input id="set-user" maxlength="20" autocomplete="off">
+      <input id="set-user" maxlength="20" autocomplete="off" oninput="checkName('set-user','msg-user')">
       <button class="action" onclick="saveUsername()">Save username</button>
       <p class="msg" id="msg-user"></p>
     </div>
@@ -242,11 +255,13 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
       <div id="swatches"></div>
       <label><input type="checkbox" id="theme-dark" onchange="setTheme()"> Dark mode</label>
       <button class="mini" onclick="resetTheme()">Back to pink</button>
+      <br><label><input type="checkbox" id="cat-on" onchange="setCat()"> Cat friend &amp; cat cursor</label>
     </div>
     <div class="panel">
       <h3>Bible version</h3>
       <select id="ver" onchange="setVersion(this.value)">
-        <option value="KJV">KJV (shows the verse text)</option>
+        <option value="KJV">KJV (shows the text)</option>
+        <option value="BBE">BBE, easy English (shows the text)</option>
         <option value="NIV">NIV (opens the passage to read)</option>
         <option value="ESV">ESV (opens the passage to read)</option>
         <option value="NLT">NLT (opens the passage to read)</option>
@@ -272,6 +287,7 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
 <footer>Made with ♡, faith, and a little bit of pink 🌸</footer>
 </div>
 
-<script src="js/app.js?v=5"></script>
+<div id="sheet"><div class="sheet-back" onclick="closeSheet()"></div><div class="sheet-panel"><h3 id="sheet-title"></h3><p id="sheet-body" class="full"></p><div class="row" id="sheet-actions"></div></div></div>
+<script src="js/app.js?v=8"></script>
 </body>
 </html>
