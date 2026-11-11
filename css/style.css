@@ -1,96 +1,96 @@
 /* A Quiet Place with God - styles */
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap');
-:root{--pink:#f58ab3;--deep:#c94f80;--light:#ffe0ec;--pale:#fff4f8;--ink:#85465f}
+:root{--pink:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 84.3%) 75.1%);--deep:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 53.0%) 54.9%);--light:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 100.0%) 93.9%);--pale:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 100.0%) 97.8%);--ink:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 31.0%) 39.8%)}
 *{box-sizing:border-box}
-body{margin:0;padding:25px 12px;color:var(--ink);font-family:'Quicksand',sans-serif;background-color:#fff0f6;
-background-image:linear-gradient(45deg,#fbd9e7 25%,transparent 25%),linear-gradient(-45deg,#fbd9e7 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#fbd9e7 75%),linear-gradient(-45deg,transparent 75%,#fbd9e7 75%);
+body{margin:0;padding:25px 12px;color:var(--ink);font-family:'Quicksand',sans-serif;background-color:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 100.0%) 97.1%);
+background-image:linear-gradient(45deg,hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 81.0%) 91.8%) 25%,transparent 25%),linear-gradient(-45deg,hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 81.0%) 91.8%) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 81.0%) 91.8%) 75%),linear-gradient(-45deg,transparent 75%,hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 81.0%) 91.8%) 75%);
 background-size:48px 48px;background-position:0 0,0 24px,24px -24px,-24px 0}
-.site{max-width:900px;margin:auto;overflow:hidden;background:#f9a8c8;border:4px dashed #df6e9b;border-radius:25px;box-shadow:0 8px 25px #b9577a30}
-header{min-height:220px;display:grid;place-items:center;text-align:center;padding:25px 12px;background:repeating-linear-gradient(90deg,#fff 0 55px,#f77eaa 55px 110px)}
-.logo{font:700 clamp(30px,6vw,54px) 'Fredoka',sans-serif;color:#f47da9;-webkit-text-stroke:1.5px white;text-shadow:3px 4px #b94776;background:#fff0f6e8;border:3px solid #f18bb2;border-radius:28px;padding:12px 20px;transform:rotate(-2deg)}
-header p{font:600 15px 'Fredoka',sans-serif;color:#bd4e7c;text-shadow:1px 1px white}
-nav{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;padding:12px 8px 18px;background:#f9a8c8}
-.nav-item{border:0;padding:4px 2px;background:transparent;color:white;cursor:pointer;font:700 clamp(11px,2vw,17px) 'Fredoka',sans-serif;text-shadow:2px 2px #cb5985,-1px -1px #cb5985}
-.nav-item svg{display:block;width:min(100%,82px);height:83px;margin:5px auto 0;filter:drop-shadow(2px 3px 0 #b64e77);transition:transform .2s}
+.site{max-width:900px;margin:auto;overflow:hidden;background:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 87.1%) 81.8%);border:4px dashed hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 63.8%) 65.3%);border-radius:25px;box-shadow:0 8px 25px hsl(calc(var(--hue,337) + 2) calc(var(--sat,1) * 41.2%) 53.3% / 0.19)}
+header{min-height:220px;display:grid;place-items:center;text-align:center;padding:25px 12px;background:repeating-linear-gradient(90deg,#fff 0 55px,hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 88.3%) 73.1%) 55px 110px)}
+.logo{font:700 clamp(30px,6vw,54px) 'Fredoka',sans-serif;color:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 84.4%) 72.4%);-webkit-text-stroke:1.5px white;text-shadow:3px 4px hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 44.9%) 50.2%);background:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 100.0%) 97.1% / 0.91);border:3px solid hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 78.5%) 74.5%);border-radius:28px;padding:12px 20px;transform:rotate(-2deg)}
+header p{font:600 15px 'Fredoka',sans-serif;color:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 45.7%) 52.4%);text-shadow:1px 1px white}
+nav{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;padding:12px 8px 18px;background:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 87.1%) 81.8%)}
+.nav-item{border:0;padding:4px 2px;background:transparent;color:white;cursor:pointer;font:700 clamp(11px,2vw,17px) 'Fredoka',sans-serif;text-shadow:2px 2px hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 52.3%) 57.3%),-1px -1px hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 52.3%) 57.3%)}
+.nav-item svg{display:block;width:min(100%,82px);height:83px;margin:5px auto 0;filter:drop-shadow(2px 3px 0 hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 41.6%) 51.0%));transition:transform .2s}
 .nav-item:hover svg,.nav-item.active svg{transform:translateY(-5px) rotate(-3deg)}
-.nav-item.active{color:#fff8fb}
+.nav-item.active{color:hsl(calc(var(--hue,337) - 3) calc(var(--sat,1) * 100.0%) 98.6%)}
 main{margin:0 14px;padding:18px;min-height:400px;background:white;border-radius:18px}
 .page{display:none;animation:appear .25s ease}
 .page.active{display:block}
 @keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-h2{font:700 23px 'Fredoka',sans-serif;text-align:center;color:white;background:var(--pink);border-radius:14px;padding:10px;margin:0 0 15px;text-shadow:1px 2px #c85b84}
-h3{font:700 18px 'Fredoka',sans-serif;color:#d65e8e}
+h2{font:700 23px 'Fredoka',sans-serif;text-align:center;color:white;background:var(--pink);border-radius:14px;padding:10px;margin:0 0 15px;text-shadow:1px 2px hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 49.8%) 57.1%)}
+h3{font:700 18px 'Fredoka',sans-serif;color:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 59.4%) 60.4%)}
 p{line-height:1.7}
-.panel{padding:18px;margin:12px 0;background:#fff5f9;border:2px solid #f7c1d5;border-radius:15px}
+.panel{padding:18px;margin:12px 0;background:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 100.0%) 98.0%);border:2px solid hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 77.1%) 86.3%);border-radius:15px}
 .center{text-align:center}
-input,textarea,select{display:block;width:100%;margin:8px 0 13px;padding:12px;border:2px solid #f4bad0;border-radius:12px;background:white;color:var(--ink);font:500 14px 'Quicksand',sans-serif}
+input,textarea,select{display:block;width:100%;margin:8px 0 13px;padding:12px;border:2px solid hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 72.5%) 84.3%);border-radius:12px;background:white;color:var(--ink);font:500 14px 'Quicksand',sans-serif}
 textarea{min-height:95px;resize:vertical}
 button.action{background:var(--pink);color:white;border:0;padding:11px 18px;border-radius:20px;font:700 14px 'Fredoka',sans-serif;cursor:pointer}
 button.action:hover{background:var(--deep)}
-.home-welcome{padding:30px 15px;text-align:center;border-radius:16px;background:#fff1f7}
+.home-welcome{padding:30px 15px;text-align:center;border-radius:16px;background:hsl(calc(var(--hue,337) - 3) calc(var(--sat,1) * 100.0%) 97.3%)}
 .home-welcome .flower{font-size:35px}
-footer{padding:20px 8px;text-align:center;font:600 13px 'Fredoka',sans-serif;color:#9d4268}
-.item{background:white;border:2px solid #f7c1d5;border-radius:12px;padding:10px 14px;margin:9px 0}
-.item h4{margin:0 0 4px;font:600 16px 'Fredoka',sans-serif;color:#d65e8e;word-break:break-word}
+footer{padding:20px 8px;text-align:center;font:600 13px 'Fredoka',sans-serif;color:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 40.8%) 43.7%)}
+.item{background:white;border:2px solid hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 77.1%) 86.3%);border-radius:12px;padding:10px 14px;margin:9px 0}
+.item h4{margin:0 0 4px;font:600 16px 'Fredoka',sans-serif;color:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 59.4%) 60.4%);word-break:break-word}
 .item h4 a{color:inherit}
 .item p{margin:0;white-space:pre-wrap;line-height:1.5;word-break:break-word}
-.item.done{background:#fff0f6}
+.item.done{background:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 100.0%) 97.1%)}
 .item.done h4::after{content:" ♡ done";font-size:13px}
 .item.done p{opacity:.65;text-decoration:line-through}
 .row{display:flex;gap:6px;margin-top:8px}
-.mini{border:0;background:#fbd9e7;color:#a8466f;border-radius:12px;padding:4px 11px;font:600 12px 'Fredoka',sans-serif;cursor:pointer}
-.mini:hover{background:#f7c1d5}
+.mini{border:0;background:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 81.0%) 91.8%);color:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 41.2%) 46.7%);border-radius:12px;padding:4px 11px;font:600 12px 'Fredoka',sans-serif;cursor:pointer}
+.mini:hover{background:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 77.1%) 86.3%)}
 .empty{text-align:center;opacity:.7;margin:10px 0 0}
-.msg{color:#c34f80;font:600 13px 'Fredoka',sans-serif;margin:8px 0 0;min-height:1em}
+.msg{color:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 49.2%) 53.7%);font:600 13px 'Fredoka',sans-serif;margin:8px 0 0;min-height:1em}
 @media(max-width:560px){body{padding:8px 4px}header{min-height:170px}nav{grid-template-columns:repeat(7,1fr);gap:2px;padding:10px 3px 12px}.nav-item{font-size:9px;line-height:1.1}.nav-item svg{height:34px;margin-top:3px}main{margin:0 8px;padding:12px}}
 
 /* Passcode screen and small helpers */
 [hidden]{display:none!important}
 .panel .action{margin:4px}
-#lock{display:none;position:fixed;inset:0;z-index:99;place-items:center;padding:16px;background:#fff0f6}
+#lock{display:none;position:fixed;inset:0;z-index:99;place-items:center;padding:16px;background:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 100.0%) 97.1%)}
 html.locked #lock{display:grid}
 html.locked .site{display:none}
-.lockbox{width:100%;max-width:340px;text-align:center;background:white;border:3px dashed #df6e9b;border-radius:20px;padding:20px}
+.lockbox{width:100%;max-width:340px;text-align:center;background:white;border:3px dashed hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 63.8%) 65.3%);border-radius:20px;padding:20px}
 
 /* Profiles and settings */
-.link{border:0;background:#fbd9e7;color:#a8466f;padding:8px 16px;border-radius:20px;font:600 13px 'Fredoka',sans-serif;cursor:pointer}
-.link:hover{background:#f7c1d5}
+.link{border:0;background:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 81.0%) 91.8%);color:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 41.2%) 46.7%);padding:8px 16px;border-radius:20px;font:600 13px 'Fredoka',sans-serif;cursor:pointer}
+.link:hover{background:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 77.1%) 86.3%)}
 a.mini{display:inline-block;margin:4px;padding:9px 15px;font-size:13px;text-decoration:none}
 .panel .mini{margin:4px}
 
 /* "with God" is part of the headline */
 .logo .with{display:block;font-size:.8em;line-height:1.1;margin-top:2px}
 .nav-item{min-width:0}
-.lock-name{margin:4px 0 8px;font:700 22px 'Fredoka',sans-serif;color:#f47da9;text-shadow:1px 2px #b94776;line-height:1.2}
+.lock-name{margin:4px 0 8px;font:700 22px 'Fredoka',sans-serif;color:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 84.4%) 72.4%);text-shadow:1px 2px hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 44.9%) 50.2%);line-height:1.2}
 .item iframe{display:block;width:100%;height:152px;border:0;border-radius:12px;margin-top:8px}
 
 /* Round 2: one straight row of smaller icons, userbar, new controls */
 nav{grid-template-columns:repeat(7,1fr);gap:2px;padding:10px 4px 14px}
 .nav-item{font-size:clamp(9px,1.7vw,16px);line-height:1.1;min-width:0}
 .nav-item svg{width:min(100%,70px);height:clamp(36px,7vw,70px)}
-.userbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 14px;background:#fff0f6;color:#9d4268;font:600 13px 'Fredoka',sans-serif}
-.link{border:0;background:#fbd9e7;color:#a8466f;border-radius:20px;padding:8px 16px;font:600 13px 'Fredoka',sans-serif;cursor:pointer}
-.link:hover{background:#f7c1d5}
+.userbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 14px;background:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 100.0%) 97.1%);color:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 40.8%) 43.7%);font:600 13px 'Fredoka',sans-serif}
+.link{border:0;background:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 81.0%) 91.8%);color:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 41.2%) 46.7%);border-radius:20px;padding:8px 16px;font:600 13px 'Fredoka',sans-serif;cursor:pointer}
+.link:hover{background:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 77.1%) 86.3%)}
 .userbar .link{padding:3px 12px}
-.lbl{display:block;font:600 13px 'Fredoka',sans-serif;color:#d65e8e}
+.lbl{display:block;font:600 13px 'Fredoka',sans-serif;color:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 59.4%) 60.4%)}
 input[type=color]{display:inline-block;width:90px;height:46px;padding:2px;cursor:pointer}
 input[type=checkbox]{display:inline-block;width:auto;margin:0 6px 0 0}
 input.mini-date{display:inline-block;width:auto;margin:0 6px;padding:4px 8px}
 #swatches{margin:4px 0 10px}
-#swatches button{width:30px;height:30px;margin:3px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #8d4561;cursor:pointer}
+#swatches button{width:30px;height:30px;margin:3px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 34.3%) 41.2%);cursor:pointer}
 .sp{display:block;width:100%;border:0;border-radius:12px;margin-top:8px}
 .item.done p{opacity:1;text-decoration:none}
 .item.done h4::after{content:none}
-html.dark body{background-color:#241820;background-image:none;--ink:#f3d9e4}
-html.dark main,html.dark .lockbox,html.dark .item{background:#2d1d26}
-html.dark #lock{background:#241820}
-html.dark .panel,html.dark .home-welcome{background:#382430;border-color:#6d3f55}
-html.dark .item{border-color:#6d3f55}
-html.dark input,html.dark textarea,html.dark select{background:#241820;color:#f3d9e4;border-color:#6d3f55}
-html.dark h3,html.dark .item h4,html.dark .lbl{color:#ffb3cf}
-html.dark footer,html.dark p{color:#f3d9e4}
-html.dark .mini,html.dark .link{background:#4a2c3b;color:#ffd1e2}
-html.dark .userbar{background:#382430;color:#f3d9e4}
+html.dark body{background-color:hsl(calc(var(--hue,337) - 17) calc(var(--sat,1) * 20.0%) 11.8%);background-image:none;--ink:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 52.0%) 90.2%)}
+html.dark main,html.dark .lockbox,html.dark .item{background:hsl(calc(var(--hue,337) - 11) calc(var(--sat,1) * 21.6%) 14.5%)}
+html.dark #lock{background:hsl(calc(var(--hue,337) - 17) calc(var(--sat,1) * 20.0%) 11.8%)}
+html.dark .panel,html.dark .home-welcome{background:hsl(calc(var(--hue,337) - 13) calc(var(--sat,1) * 21.7%) 18.0%);border-color:hsl(calc(var(--hue,337) - 6) calc(var(--sat,1) * 26.7%) 33.7%)}
+html.dark .item{border-color:hsl(calc(var(--hue,337) - 6) calc(var(--sat,1) * 26.7%) 33.7%)}
+html.dark input,html.dark textarea,html.dark select{background:hsl(calc(var(--hue,337) - 17) calc(var(--sat,1) * 20.0%) 11.8%);color:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 52.0%) 90.2%);border-color:hsl(calc(var(--hue,337) - 6) calc(var(--sat,1) * 26.7%) 33.7%)}
+html.dark h3,html.dark .item h4,html.dark .lbl{color:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 100.0%) 85.1%)}
+html.dark footer,html.dark p{color:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 52.0%) 90.2%)}
+html.dark .mini,html.dark .link{background:hsl(calc(var(--hue,337) - 7) calc(var(--sat,1) * 25.4%) 23.1%);color:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 100.0%) 91.0%)}
+html.dark .userbar{background:hsl(calc(var(--hue,337) - 13) calc(var(--sat,1) * 21.7%) 18.0%);color:hsl(calc(var(--hue,337) - 2) calc(var(--sat,1) * 52.0%) 90.2%)}
 
 /* Drawer-style entries */
 .item summary{cursor:pointer;list-style:none}
@@ -104,3 +104,38 @@ html.dark .userbar{background:#382430;color:#f3d9e4}
 
 .lockbox .note{font-size:13px;margin:6px 0 0}
 .lockbox .action{margin:4px 0}
+
+/* Drawer sheet + compact rows; color controls show their true colors */
+#swatches button,#theme-color{filter:none}
+.item.rc{display:flex;align-items:flex-start;gap:8px;cursor:pointer}
+.item.rc:hover{background:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 100.0%) 98.0%)}
+.rc-main{flex:1;min-width:0}
+.item.rc .peek{display:-webkit-box}
+.trash{flex:none;margin:0}
+#sheet{display:none;position:fixed;inset:0;z-index:60}
+#sheet.show{display:block}
+.sheet-back{position:absolute;inset:0;background:rgba(80,30,50,.45);opacity:0;transition:opacity .3s}
+#sheet.open .sheet-back{opacity:1}
+.sheet-panel{position:absolute;left:50%;bottom:0;width:min(100%,720px);max-height:85vh;overflow-y:auto;background:#fff;border:3px dashed hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 63.8%) 65.3%);border-bottom:0;border-radius:22px 22px 0 0;padding:18px 20px 24px;transform:translate(-50%,100%);transition:transform .3s ease}
+#sheet.open .sheet-panel{transform:translate(-50%,0)}
+.sheet-panel h3{margin:0 0 8px}
+.sheet-panel .full{white-space:pre-wrap;word-break:break-word;line-height:1.7;margin:0 0 12px}
+html.dark .sheet-panel{background:hsl(calc(var(--hue,337) - 11) calc(var(--sat,1) * 21.6%) 14.5%);border-color:hsl(calc(var(--hue,337) - 6) calc(var(--sat,1) * 26.7%) 33.7%)}
+html.dark .item.rc:hover{background:hsl(calc(var(--hue,337) - 13) calc(var(--sat,1) * 21.7%) 18.0%)}
+
+/* Round 4: entry meta, stickers, cat, Bible reader, YouTube */
+.item small{display:block;font-size:12px;opacity:.8}
+#sheet-stk{margin:8px 0}
+#sheet-stk button{border:2px solid transparent;background:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 100.0%) 98.0%);border-radius:12px;font-size:22px;padding:2px 6px;margin:3px;cursor:pointer}
+#sheet-stk button.on{border-color:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 84.3%) 75.1%);background:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 100.0%) 93.9%)}
+html.dark #sheet-stk button{background:hsl(calc(var(--hue,337) - 13) calc(var(--sat,1) * 21.7%) 18.0%)}
+#cat{position:fixed;left:0;top:0;font-size:34px;pointer-events:none;z-index:5;display:none;will-change:transform}
+html.nocat #cat{display:none!important}
+.note{font-size:13px;margin:6px 0 0}
+.sp.yt{aspect-ratio:16/9;height:auto}
+#bible-out{margin-top:10px;line-height:1.7}
+#bible-out .chap{max-height:380px;overflow:auto;margin:6px 0}
+#bible-out sup{color:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 59.4%) 60.4%);font-weight:700}
+html{--cat:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 4l6 5h10l6-5v14c0 6-5 10-11 10S5 24 5 18z' fill='%23ffd1e2' stroke='%238d4561' stroke-width='2' stroke-linejoin='round'/%3E%3Ccircle cx='12' cy='17' r='1.8' fill='%238d4561'/%3E%3Ccircle cx='20' cy='17' r='1.8' fill='%238d4561'/%3E%3Cpath d='M14.5 21h3l-1.5 2z' fill='%23f58ab3'/%3E%3Cpath d='M3 20l6 1M3 24l6-1M29 20l-6 1M29 24l-6-1' stroke='%238d4561' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E")}
+html:not(.nocat),html:not(.nocat) body{cursor:var(--cat) 4 4,auto}
+html:not(.nocat) :is(a,button,select,label,.nav-item,[role=button],input[type=color],input[type=checkbox]){cursor:var(--cat) 4 4,pointer}
