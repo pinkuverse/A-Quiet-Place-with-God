@@ -38,29 +38,34 @@ function showPage(page, button) {
 // ---- Bible: KJV and BBE are public domain, so their text is bundled in /data. NIV, ESV, NLT, NKJV are copyrighted, so they open on BibleGateway ----
 const BOOKS = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel", "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi", "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians", "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus", "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John", "3 John", "Jude", "Revelation"];
 const BUNDLED = {KJV:'data/kjv.json', BBE:'data/bbe.json'};
-const VERSES = [["Be still, and know that I am God: I will be exalted among the heathen, I will be exalted in the earth.", "Psalms", 46, 10, 0], ["The LORD is my shepherd; I shall not want.", "Psalms", 23, 1, 0], ["The LORD is my light and my salvation; whom shall I fear? the LORD is the strength of my life; of whom shall I be afraid?", "Psalms", 27, 1, 0], ["O taste and see that the LORD is good: blessed is the man that trusteth in him.", "Psalms", 34, 8, 0], ["Delight thyself also in the LORD ; and he shall give thee the desires of thine heart.", "Psalms", 37, 4, 0], ["He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty.", "Psalms", 91, 1, 0], ["Thy word is a lamp unto my feet, and a light unto my path.", "Psalms", 119, 105, 0], ["I will lift up mine eyes unto the hills, from whence cometh my help. My help cometh from the LORD , which made heaven and earth.", "Psalms", 121, 1, 2], ["I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.", "Psalms", 139, 14, 0], ["Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.", "Proverbs", 3, 5, 6], ["Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.", "Isaiah", 26, 3, 0], ["But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.", "Isaiah", 40, 31, 0], ["Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.", "Isaiah", 41, 10, 0], ["For I know the thoughts that I think toward you, saith the LORD , thoughts of peace, and not of evil, to give you an expected end.", "Jeremiah", 29, 11, 0], ["It is of the LORD’s mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.", "Lamentations", 3, 22, 23], ["Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.", "Joshua", 1, 9, 0], ["But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.", "Matthew", 6, 33, 0], ["Come unto me, all ye that labour and are heavy laden, and I will give you rest.", "Matthew", 11, 28, 0], ["For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.", "John", 3, 16, 0], ["Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.", "John", 14, 27, 0], ["And we know that all things work together for good to them that love God, to them who are the called according to his purpose.", "Romans", 8, 28, 0], ["And he said unto me, My grace is sufficient for thee: for my strength is made perfect in weakness. Most gladly therefore will I rather glory in my infirmities, that the power of Christ may rest upon me.", "2 Corinthians", 12, 9, 0], ["For by grace are ye saved through faith; and that not of yourselves: it is the gift of God:", "Ephesians", 2, 8, 0], ["Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God.", "Philippians", 4, 6, 0], ["I can do all things through Christ which strengtheneth me.", "Philippians", 4, 13, 0], ["Rejoice evermore. Pray without ceasing. In every thing give thanks: for this is the will of God in Christ Jesus concerning you.", "1 Thessalonians", 5, 16, 18], ["Now faith is the substance of things hoped for, the evidence of things not seen.", "Hebrews", 11, 1, 0], ["Draw nigh to God, and he will draw nigh to you. Cleanse your hands, ye sinners; and purify your hearts, ye double minded.", "James", 4, 8, 0], ["Casting all your care upon him; for he careth for you.", "1 Peter", 5, 7, 0], ["Teaching them to observe all things whatsoever I have commanded you: and, lo, I am with you alway, even unto the end of the world. Amen.", "Matthew", 28, 20, 0]];
+let VOTD = null;
+const rnd = n => Math.floor(Math.random() * n);
+const votd = async () => VOTD || (VOTD = await (await fetch('data/votd.json')).json());
+const dayIndex = () => { const n = new Date(); return (Math.floor((n - new Date(n.getFullYear(), 0, 0)) / 864e5) - 1) % 365; };
 const bibleCache = {};
 const bible = async v => bibleCache[v] || (bibleCache[v] = await (await fetch(BUNDLED[v])).json());
-let vi = 0, vseq = 0;
+let vi = -1, vseq = 0;
 const version = () => LS.get(key('version')) || 'KJV';
 const passageUrl = (ref, ver) => 'https://www.biblegateway.com/passage/?search=' + encodeURIComponent(ref) + '&version=' + ver;
-const refOf = v => v[1] + ' ' + v[2] + ':' + v[3] + (v[4] ? '-' + v[4] : '');
 async function showVerse() {
-  const v = VERSES[vi], ref = refOf(v), ver = version(), link = $('vlink'), my = ++vseq;
-  $('rv').value = ver;
+  const my = ++vseq, ver = version(), link = $('vlink');
+  let v;
+  try { const d = await votd(); v = d[vi < 0 ? (vi = dayIndex()) : vi]; }
+  catch (e) { v = ['John', 3, 16, 0, 'For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.']; }
+  const ref = v[0] + ' ' + v[1] + ':' + v[2] + (v[3] ? '-' + v[3] : '');
   $('read-btn').textContent = 'Read in ' + ver + ' ♡';
   link.hidden = true;
   $('vref').textContent = ref + ' (' + ver + ')';
-  let text = ver === 'KJV' ? v[0] : null;
+  let text = ver === 'KJV' ? v[4] : null;
   if (!text && BUNDLED[ver]) {
-    try { const d = await bible(ver); text = d[BOOKS.indexOf(v[1])].chapters[v[2] - 1].slice(v[3] - 1, v[4] || v[3]).join(' '); } catch (e) {}
+    try { const d = await bible(ver); text = d[BOOKS.indexOf(v[0])].chapters[v[1] - 1].slice(v[2] - 1, v[3] || v[2]).join(' '); } catch (e) {}
   }
   if (my !== vseq) return;
   if (text) $('verse').textContent = '"' + text + '"';
   else { $('verse').textContent = ref; $('vref').textContent = ''; link.href = passageUrl(ref, ver); link.textContent = 'Read in ' + ver; link.hidden = false; }
 }
-function nextVerse() { vi = (vi + 1 + Math.floor(Math.random() * (VERSES.length - 1))) % VERSES.length; showVerse(); }
-function setVersion(v) { LS.set(key('version'), v); $('ver').value = v; showVerse(); }
+function nextVerse() { votd().then(d => { vi = (vi + 1 + rnd(d.length - 1)) % d.length; showVerse(); }); }
+function setVersion(v) { LS.set(key('version'), v); $('ver').value = v; $('rv').value = v; showVerse(); }
 function readPassage() {
   const ref = $('bible1').value.trim(), m = $('msg-bible');
   if (!ref) { m.textContent = 'Type a passage first, like Psalm 23.'; return; }
@@ -69,7 +74,7 @@ function readPassage() {
 }
 async function readBible(book, ch) {
   if (book !== undefined) { $('bk').value = book; $('bch').value = ch; $('bvs').value = ''; }
-  const bi = +$('bk').value, c = +$('bch').value || 1, vs = $('bvs').value.trim(), ver = version(), out = $('bible-out');
+  const bi = +$('bk').value, c = +$('bch').value || 1, vs = $('bvs').value.trim(), ver = $('rv').value, out = $('bible-out');
   const ref = BOOKS[bi] + ' ' + c + (vs ? ':' + vs : '');
   out.textContent = '';
   if (!BUNDLED[ver]) {
@@ -152,7 +157,7 @@ function add(k) {
   msg.textContent = 'Saved ♡';
   render(k);
 }
-const STICKERS = ['🌸','🎀','🧸','⭐','🌷','🕊️','✨','🦋','💌','☁️','🐈','🍓'];
+const STICKERS = ['⭐','🕊️','✨','🔥','⛰️','🌿','☀️','🌙','📖','✝️','🙏','⚓','🦁','🌊','💡','🛡️'];
 function patch(k, id, fn) { const a = load(k), it = a.find(x => x.id === id); if (it) fn(it); save(k, a); render(k); }
 function setPrayer(k, id, done, date) {
   const a = load(k), it = a.find(x => x.id === id);
@@ -202,7 +207,11 @@ function card(k, it) {
   if (text) { const pk = document.createElement('p'); pk.className = 'peek'; pk.textContent = text; main.appendChild(pk); }
   const t = document.createElement('button'); t.className = 'mini trash'; t.title = 'Delete'; t.setAttribute('aria-label', 'Delete'); t.textContent = '\ud83d\uddd1';
   t.onclick = e => { e.stopPropagation(); remove(k, it.id); };
-  d.append(main, t);
+  if (k === 'prayers') {
+    const a = document.createElement('button'); a.className = 'mini trash'; a.title = it.done ? 'Back to requests' : 'Mark as answered'; a.setAttribute('aria-label', a.title); a.textContent = it.done ? '↩' : '✓';
+    a.onclick = e => { e.stopPropagation(); setPrayer(k, it.id, !it.done, today()); };
+    d.append(main, a, t);
+  } else d.append(main, t);
   d.tabIndex = 0; d.setAttribute('role', 'button');
   d.onclick = () => openSheet(k, it);
   d.onkeydown = e => { if (e.key === 'Enter' && e.target === d) openSheet(k, it); };
@@ -228,6 +237,7 @@ function openSheet(k, it) {
     t.onclick = () => it.done ? setPrayer(k, it.id, false) : answerForm(r, k, it.id);
     r.appendChild(t);
   }
+  if (k === 'prayers' && it.done) { const cd = document.createElement('button'); cd.className = 'mini'; cd.textContent = 'Change answered date'; cd.onclick = () => answerForm(r, k, it.id); r.appendChild(cd); }
   const x = document.createElement('button'); x.className = 'mini'; x.textContent = 'Delete'; x.onclick = () => remove(k, it.id);
   const c = document.createElement('button'); c.className = 'mini'; c.textContent = 'Close'; c.onclick = closeSheet;
   r.append(x, c);
@@ -361,6 +371,7 @@ function startSession(id) {
   paint();
   Object.keys(FIELDS).forEach(render);
   restoreDraft();
+  $('rv').value = version();
   showVerse();
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 }
@@ -445,6 +456,117 @@ async function createProfile() {
   ['new-display', 'new-name', 'new-pass'].forEach(i => { $(i).value = ''; });
   startSession(id);
 }
+// ---- Bible quizzes ----
+const QN = 10;
+const CHAPS = [50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150, 31, 12, 8, 66, 52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4, 28, 16, 24, 21, 28, 16, 16, 13, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5, 5, 3, 5, 1, 1, 1, 22];
+const TRIVIA = [["Who built the ark?", "Noah", "Moses", "Abraham", "Jonah", "Noah obeyed God and built the ark to save his family and the animals from the flood (Genesis 6–9)."], ["Who was swallowed by a great fish?", "Jonah", "Elijah", "Daniel", "Peter", "Jonah ran from God's call to Nineveh, was swallowed by a great fish, and prayed from inside it (Jonah 1–2)."], ["Which disciple walked on water toward Jesus?", "Peter", "John", "Thomas", "Andrew", "Peter stepped out of the boat, but began to sink when he looked at the waves (Matthew 14:29–31)."], ["How many days did God spend creating before he rested?", "Six", "Seven", "Three", "Forty", "God created in six days and rested on the seventh (Genesis 1–2)."], ["Who was thrown into the lions' den?", "Daniel", "Joseph", "David", "Samson", "Daniel kept praying to God, and God shut the lions' mouths (Daniel 6)."], ["What did David use to defeat Goliath?", "A sling and a stone", "A sword", "A spear", "A bow and arrow", "David trusted the Lord and struck Goliath with a stone from his sling (1 Samuel 17)."], ["Who led the Israelites out of Egypt?", "Moses", "Joshua", "Aaron", "Abraham", "God used Moses to bring Israel out of slavery in Egypt (Exodus 3–14)."], ["In which town was Jesus born?", "Bethlehem", "Nazareth", "Jerusalem", "Capernaum", "Jesus was born in Bethlehem, as the prophet Micah foretold (Micah 5:2; Luke 2:4–7)."], ["How many disciples did Jesus choose to be his closest followers?", "Twelve", "Seven", "Ten", "Forty", "Jesus chose twelve disciples to be with him and to send out (Mark 3:13–19)."], ["Who betrayed Jesus for thirty pieces of silver?", "Judas Iscariot", "Peter", "Thomas", "Pilate", "Judas handed Jesus over to the chief priests for thirty pieces of silver (Matthew 26:14–16)."], ["Who was the first man God created?", "Adam", "Cain", "Noah", "Seth", "God formed Adam from the dust of the ground (Genesis 2:7)."], ["Which sea did God part so Israel could cross on dry ground?", "The Red Sea", "The Dead Sea", "The Sea of Galilee", "The Mediterranean Sea", "The Lord parted the Red Sea and Israel crossed on dry ground (Exodus 14)."], ["Who was the mother of Jesus?", "Mary", "Martha", "Elizabeth", "Ruth", "Mary was the young woman chosen to bear Jesus (Luke 1:26–38)."], ["Where did Jesus pray the night before he was arrested?", "Gethsemane", "Eden", "Bethany", "Gilgal", "Jesus prayed in the garden of Gethsemane (Matthew 26:36–46)."], ["Who wrote many of the New Testament letters, like Romans and Philippians?", "Paul", "Peter", "James", "Jude", "Paul wrote many letters to churches and friends that are now part of the New Testament."], ["How many plagues did God send on Egypt?", "Ten", "Seven", "Twelve", "Three", "Ten plagues, ending with the death of the firstborn, led Pharaoh to let Israel go (Exodus 7–12)."], ["Which woman risked her life to save her people from Haman's plot?", "Esther", "Ruth", "Deborah", "Naomi", "Queen Esther approached the king uninvited to plead for her people (Esther 4–8)."], ["Whose strength was tied to his uncut hair?", "Samson", "Gideon", "Saul", "Jonathan", "Samson was a Nazirite, and his long hair was a sign of his vow to God (Judges 13–16)."], ["What did God give Moses on Mount Sinai?", "The Ten Commandments", "The ark of the covenant", "Manna", "Plans for the temple", "God gave the Ten Commandments written on two stone tablets (Exodus 20; 31:18)."], ["Who anointed David to be the future king of Israel?", "Samuel", "Nathan", "Eli", "Elijah", "Samuel anointed the youngest son of Jesse, David (1 Samuel 16:1–13)."], ["Who baptized Jesus in the Jordan River?", "John the Baptist", "Peter", "Paul", "Philip", "John baptized Jesus, and the Spirit came down like a dove (Matthew 3:13–17)."], ["What did Jesus use to feed more than five thousand people?", "Five loaves and two fish", "Seven loaves and a few fish", "Manna from heaven", "Bread from the temple", "Jesus gave thanks for five loaves and two fish and fed the crowd (John 6:1–14)."], ["Who was Abraham's wife?", "Sarah", "Rebekah", "Rachel", "Leah", "Sarah gave birth to Isaac in her old age, as God had promised (Genesis 21:1–3)."], ["Which prophet was taken up to heaven in a whirlwind with chariots of fire?", "Elijah", "Elisha", "Isaiah", "Jeremiah", "Elijah went up in a whirlwind, and Elisha received his mantle (2 Kings 2:11–13)."], ["Who was sold by his brothers and later became a ruler in Egypt?", "Joseph", "Benjamin", "Reuben", "Judah", "Joseph forgave his brothers, saying God meant it for good (Genesis 37–50; 50:20)."], ["Which is the shortest verse in the English King James Bible?", "\"Jesus wept.\"", "\"God is love.\"", "\"Pray without ceasing.\"", "\"Be still.\"", "\"Jesus wept.\" (John 11:35) shows Jesus' compassion at the grave of his friend Lazarus."], ["Which disciple said he would not believe until he saw Jesus' wounds?", "Thomas", "Peter", "Philip", "Andrew", "Thomas then said, \"My Lord and my God\" (John 20:24–29)."], ["On which day did the women find Jesus' tomb empty?", "The first day of the week", "Friday", "Saturday", "Thursday", "They found the stone rolled away on the first day of the week (Luke 24:1–6)."], ["How many books are in the (Protestant) Bible?", "66", "39", "27", "72", "There are 39 Old Testament books and 27 New Testament books, making 66."], ["Who asked God for wisdom instead of riches?", "Solomon", "David", "Saul", "Hezekiah", "Solomon asked for an understanding heart, and God gave him wisdom and more (1 Kings 3:5–12)."], ["What was Jesus' first miracle in John's Gospel?", "Turning water into wine", "Healing a blind man", "Walking on water", "Feeding the five thousand", "At the wedding in Cana, Jesus turned water into wine (John 2:1–11)."], ["Who denied knowing Jesus three times?", "Peter", "Judas", "John", "Thomas", "Peter wept bitterly, and Jesus later restored him (Luke 22:54–62; John 21:15–17)."], ["Where was Saul when Jesus appeared to him in a bright light?", "On the road to Damascus", "In Jerusalem", "In Rome", "In Antioch", "Saul became Paul, the apostle to the Gentiles (Acts 9:1–19)."], ["What did Jesus call the greatest commandment?", "Love the Lord your God with all your heart", "Keep the Sabbath", "Honor your father and mother", "Do not steal", "Jesus said to love God with all your heart, soul and mind (Matthew 22:37–38)."]];
+const STOP = new Set(['shall','which','their','these','those','there','unto','thee','thou','thy','thine','with','from','have','will','that','this','them','they','were','your','also','into','upon','being','hath','doth','said','saith','before','because','would','could','should','where','when','what','whom','whose','every','other']);
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const k = rnd(i + 1); [a[i], a[k]] = [a[k], a[i]]; } return a; };
+const section = b => b < 5 ? 'a book of the Law (Old Testament)' : b < 17 ? 'a history book (Old Testament)' : b < 22 ? 'a wisdom and poetry book (Old Testament)' : b < 27 ? 'a Major Prophets book (Old Testament)' : b < 39 ? 'a Minor Prophets book (Old Testament)' : b < 43 ? 'a Gospel (New Testament)' : b === 43 ? 'the story of the early church (New Testament)' : b < 57 ? "one of Paul's letters (New Testament)" : b < 65 ? 'one of the General Letters (New Testament)' : 'the book of prophecy that closes the New Testament';
+const vref = v => v[0] + ' ' + v[1] + ':' + v[2] + (v[3] ? '-' + v[3] : '');
+const word = w => w.replace(/[^A-Za-z']/g, '');
+const goodWord = w => word(w).length >= 5 && !STOP.has(word(w).toLowerCase());
+const others = (b, same) => shuffle(BOOKS.map((n, i) => i).filter(i => i !== b && (!same || (i >= 39) === (b >= 39)))).slice(0, 3).map(i => BOOKS[i]);
+function triviaQ() {
+  if (Math.random() < .45) { const i = rnd(TRIVIA.length), t = TRIVIA[i]; return {id:'t' + i, q:t[0], opts:t.slice(1, 5), why:t[5]}; }
+  const b = rnd(66), kind = rnd(3), name = BOOKS[b];
+  if (kind === 0 && b < 65) return {id:'n' + b + 'a', q:'Which book comes right after ' + name + '?', opts:[BOOKS[b + 1]].concat(others(b + 1, false).filter(n => n !== name)).slice(0, 4), why:BOOKS[b + 1] + ' comes right after ' + name + ' in the Bible.'};
+  if (kind === 1) {
+    const set = new Set([CHAPS[b]]);
+    while (set.size < 4) { const n = CHAPS[b] + rnd(25) - 12; if (n > 0) set.add(n); }
+    return {id:'n' + b + 'b', q:'How many chapters does ' + name + ' have?', opts:[...set].map(String), why:name + ' has ' + CHAPS[b] + ' chapter' + (CHAPS[b] > 1 ? 's' : '') + '.'};
+  }
+  const nt = b >= 39;
+  return {id:'n' + b + 'c', q:'Is ' + name + ' in the Old Testament or the New Testament?', opts:[nt ? 'New Testament' : 'Old Testament', nt ? 'Old Testament' : 'New Testament'], why:name + ' is ' + section(b) + '.'};
+}
+function verseQ() {
+  const i = rnd(VOTD.length), v = VOTD[i], words = v[4].split(/\s+/), cand = words.map((w, k) => k).filter(k => goodWord(words[k]));
+  if (!cand.length) return null;
+  const k = cand[rnd(cand.length)], target = word(words[k]), cap = /^[A-Z]/.test(target), opts = [target];
+  for (let n = 0; n < 300 && opts.length < 4; n++) {
+    const ow = VOTD[rnd(VOTD.length)][4].split(/\s+/).filter(goodWord);
+    if (!ow.length) continue;
+    let w = word(ow[rnd(ow.length)]).toLowerCase(); if (cap) w = w[0].toUpperCase() + w.slice(1);
+    if (w.toLowerCase() !== target.toLowerCase() && Math.abs(w.length - target.length) <= 2 && !opts.some(o => o.toLowerCase() === w.toLowerCase())) opts.push(w);
+  }
+  if (opts.length < 4) return null;
+  return {id:'v' + i, q:'Complete the verse:\n"' + words.map((w, j) => j === k ? w.replace(target, '_____') : w).join(' ') + '"', opts, why:vref(v) + ' (KJV): "' + v[4] + '"'};
+}
+function bookQ() {
+  const i = rnd(VOTD.length), v = VOTD[i], b = BOOKS.indexOf(v[0]);
+  return {id:'b' + i, q:'Which book is this verse from?\n"' + v[4] + '"', opts:[v[0]].concat(others(b, true)), why:vref(v) + ' — ' + v[0] + ' is ' + section(b) + '.'};
+}
+const MAKERS = {trivia:triviaQ, verse:verseQ, book:bookQ}, POOL = {trivia:() => TRIVIA.length + 198, verse:() => VOTD.length, book:() => VOTD.length};
+let quiz = null;
+function makeQ() { // never repeats a question until the whole pool has been played
+  const g = quiz.g, k = key('seen_' + g); let seen;
+  try { seen = new Set(JSON.parse(LS.get(k)) || []); } catch (e) { seen = new Set(); }
+  if (seen.size >= POOL[g]() - 8) seen.clear();
+  let q = null;
+  for (let n = 0; n < 400 && !q; n++) { const c = MAKERS[g](); if (c && !seen.has(c.id) && !quiz.ids.has(c.id)) q = c; }
+  while (!q) q = MAKERS[g]();
+  seen.add(q.id); quiz.ids.add(q.id); LS.set(k, JSON.stringify([...seen]));
+  return q;
+}
+async function startQuiz(g) {
+  if (g !== 'trivia') { try { await votd(); } catch (e) { $('quiz-menu').insertAdjacentText('beforeend', 'This game needs an internet connection the first time.'); return; } }
+  else { try { await votd(); } catch (e) {} }
+  quiz = {g, i:0, score:0, ids:new Set(), done:false};
+  $('quiz-menu').hidden = true; $('quiz-play').hidden = false;
+  showQ();
+}
+function quitQuiz() { $('quiz-play').hidden = true; $('quiz-menu').hidden = false; quiz = null; }
+function showQ() {
+  $('q-why').hidden = true; $('q-next').hidden = true; $('q-opts').hidden = false;
+  const q = quiz.q = makeQ();
+  quiz.correct = q.opts[0];
+  $('q-n').textContent = 'Question ' + (quiz.i + 1) + ' of ' + QN;
+  $('q-score').textContent = '⭐ ' + quiz.score;
+  $('q-bar').style.width = (quiz.i / QN * 100) + '%';
+  $('q-text').textContent = q.q;
+  const box = $('q-opts'); box.textContent = '';
+  shuffle(q.opts.slice()).forEach(o => {
+    const b = document.createElement('button'); b.className = 'qopt'; b.textContent = o;
+    b.onclick = () => answerQ(b, o); box.appendChild(b);
+  });
+}
+function answerQ(btn, o) {
+  const good = o === quiz.correct;
+  document.querySelectorAll('#q-opts .qopt').forEach(b => { b.disabled = true; if (b.textContent === quiz.correct) b.classList.add('good'); });
+  if (!good) btn.classList.add('bad'); else quiz.score++;
+  $('q-score').textContent = '⭐ ' + quiz.score;
+  $('q-why').textContent = (good ? '✓ Correct! ' : '✗ The answer is ' + quiz.correct + '. ') + quiz.q.why;
+  $('q-why').hidden = false;
+  $('q-next').textContent = quiz.i + 1 >= QN ? 'See my score' : 'Next ▶'; $('q-next').hidden = false;
+}
+function nextQ() {
+  if (quiz.done) { startQuiz(quiz.g); return; }
+  if (++quiz.i < QN) { showQ(); return; }
+  quiz.done = true;
+  const bk = key('best_' + quiz.g), best = Math.max(+LS.get(bk) || 0, quiz.score); LS.set(bk, best);
+  const s = quiz.score;
+  $('q-bar').style.width = '100%'; $('q-n').textContent = 'Round finished'; $('q-score').textContent = '⭐ ' + s;
+  $('q-text').textContent = 'You got ' + s + ' out of ' + QN + '!\n' + (s >= 9 ? 'Amazing! You really know your Bible ♡' : s >= 7 ? 'Great job! Keep growing ♡' : s >= 4 ? 'Nice try! Every round teaches something ♡' : 'Good start! Read a little and try again ♡') + '\nYour best: ' + best + '/' + QN;
+  $('q-opts').hidden = true; $('q-why').hidden = true;
+  $('q-next').textContent = 'Play again ↻'; $('q-next').hidden = false;
+}
+
+// ---- Review bubbles on the login screen ----
+const REVIEWS = ["I love the colors and design also the devotion reminder.", "This is so cute", "I like that I can change the color and theme of the website.", "I like the part where in I can put a song link and it plays the song while I can still write my devotions while the song is playing.", "I like the Bible Study cause you can literally learn the content of the scripture. More improvement to the website."];
+let chatI = 0;
+function chatLoop() {
+  const box = $('chat');
+  if (!document.documentElement.classList.contains('locked')) { box.textContent = ''; setTimeout(chatLoop, 1500); return; }
+  const b = document.createElement('div'), s = document.createElement('small'), p = document.createElement('p'), text = REVIEWS[chatI++ % REVIEWS.length], hold = 3600 + text.length * 45;
+  s.textContent = '💬 Review'; p.className = 'dots';
+  for (let i = 0; i < 3; i++) p.appendChild(document.createElement('i'));
+  b.className = 'bubble'; b.append(s, p); box.appendChild(b);
+  setTimeout(() => { p.className = ''; p.textContent = text; }, 1100);
+  setTimeout(() => b.classList.add('out'), 1100 + hold);
+  setTimeout(() => b.remove(), 1700 + hold);
+  setTimeout(chatLoop, 1100 + hold);
+}
+
 // ---- Username warning, cat friend and cat cursor ----
 function checkName(id, msgId) {
   const v = $(id).value.trim(), o = v && byName(v);
@@ -452,22 +574,40 @@ function checkName(id, msgId) {
 }
 const catOn = () => LS.get('qp_cat') !== '0';
 const setCatClass = () => document.documentElement.classList.toggle('nocat', !catOn());
-function setCat() { LS.set('qp_cat', $('cat-on').checked ? '1' : '0'); setCatClass(); }
-const cat = {x:0, y:0, tx:0, ty:0, f:1, seen:false};
-function moveCat(e) { // the cat only walks on the tiles beside the site, never over the content
-  const el = $('cat'), r = document.querySelector('.site').getBoundingClientRect(), W = innerWidth, left = r.left, right = W - r.right;
-  if (!catOn() || Math.max(left, right) < 70) { el.style.display = 'none'; return; }
-  const useLeft = left >= 70 && (e.clientX < W / 2 || right < 70);
-  cat.tx = useLeft ? Math.min(Math.max(e.clientX - 20, 4), left - 48) : Math.min(Math.max(e.clientX - 20, r.right + 6), W - 46);
-  cat.ty = Math.min(Math.max(e.clientY - 18, 0), innerHeight - 44);
-  if (!cat.seen) { cat.seen = true; cat.x = cat.tx; cat.y = cat.ty; }
+function setCat() { LS.set('qp_cat', $('cat-on').checked ? '1' : '0'); setCatClass(); placeCat(); }
+const cat = {x:0, y:0, tx:0, ty:0, side:0, seen:false, state:'sit', until:0, next:0, idleSince:0, last:0};
+const CAT = 72;
+function catState(s) { if (cat.state !== s) { cat.state = s; $('cat').className = 's-' + s; } }
+function placeCat() {
+  const r = document.querySelector('.site').getBoundingClientRect(), W = innerWidth, L = r.left, R = W - r.right, need = CAT + 20, el = $('cat');
+  if (!catOn() || Math.max(L, R) < need) { el.style.display = 'none'; return; }
   el.style.display = 'block';
+  if (!cat.seen) { cat.seen = true; cat.side = L >= need ? 1 : 2; cat.x = cat.tx = cat.side === 1 ? Math.max(4, L / 2 - CAT / 2) : r.right + (R - CAT) / 2; cat.y = cat.ty = innerHeight - CAT - 24; }
 }
-function tickCat() {
-  const dx = cat.tx - cat.x;
-  cat.x += dx * .1; cat.y += (cat.ty - cat.y) * .1;
-  if (Math.abs(dx) > .5) cat.f = dx > 0 ? -1 : 1;
-  $('cat').style.transform = 'translate(' + cat.x + 'px,' + cat.y + 'px) scaleX(' + cat.f + ')';
+function moveCat(e) { // follows only while the cursor is on the tiles; over the site the cat stays where it was left
+  const r = document.querySelector('.site').getBoundingClientRect(), W = innerWidth, L = r.left, R = W - r.right, need = CAT + 20;
+  if (!catOn() || Math.max(L, R) < need) { $('cat').style.display = 'none'; return; }
+  $('cat').style.display = 'block';
+  const left = e.clientX < r.left - 6 && L >= need, right = e.clientX > r.right + 6 && R >= need;
+  if (!left && !right) return;
+  const side = left ? 1 : 2;
+  cat.tx = left ? Math.min(Math.max(e.clientX - CAT / 2, 4), L - CAT - 6) : Math.min(Math.max(e.clientX - CAT / 2, r.right + 6), W - CAT - 4);
+  cat.ty = Math.min(Math.max(e.clientY - CAT * .6, 0), innerHeight - CAT - 4);
+  if (!cat.seen || cat.side !== side) { cat.x = cat.tx; cat.y = cat.ty; cat.seen = true; }
+  cat.side = side; cat.last = performance.now();
+}
+function tickCat(t) {
+  const dx = cat.tx - cat.x, dy = cat.ty - cat.y;
+  cat.x += dx * .09; cat.y += dy * .09;
+  if (Math.hypot(dx, dy) > 8 && t - cat.last < 700) { catState('walk'); cat.idleSince = 0; }
+  else if (cat.state === 'walk') { catState('sit'); cat.idleSince = t; cat.next = t + 1800; }
+  else if (!cat.idleSince) { cat.idleSince = t; cat.next = t + 1500; }
+  else if (cat.state !== 'sit' && t > cat.until) { catState('sit'); cat.next = t + 2200 + Math.random() * 2800; }
+  else if (cat.state === 'sit' && t > cat.next) {
+    const pick = t - cat.idleSince > 12000 && Math.random() < .5 ? 'sleep' : ['lick', 'yawn', 'happy', 'lick'][rnd(4)];
+    catState(pick); cat.until = t + ({lick:3600, yawn:2600, happy:2600, sleep:9000})[pick];
+  }
+  $('cat').style.transform = 'translate(' + cat.x + 'px,' + cat.y + 'px)';
   requestAnimationFrame(tickCat);
 }
 function initExtras() {
@@ -475,6 +615,9 @@ function initExtras() {
   BOOKS.forEach((n, i) => { const o = document.createElement('option'); o.value = i; o.textContent = n; bk.appendChild(o); });
   $('rv').innerHTML = $('ver').innerHTML;
   setCatClass();
+  placeCat();
+  addEventListener('resize', placeCat);
+  setTimeout(chatLoop, 900);
   if (matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion:reduce)').matches) {
     document.addEventListener('mousemove', moveCat);
     requestAnimationFrame(tickCat);
