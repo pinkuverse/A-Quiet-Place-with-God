@@ -9,7 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌷</text></svg>">
 <script>function applyTheme(t){try{t=t||{};var c=t.c||'#f58ab3',r=parseInt(c.substr(1,2),16)/255,g=parseInt(c.substr(3,2),16)/255,b=parseInt(c.substr(5,2),16)/255,x=Math.max(r,g,b),n=Math.min(r,g,b),d=x-n,h=0;if(d){h=x==r?((g-b)/d)%6:x==g?(b-r)/d+2:(r-g)/d+4;h*=60;if(h<0)h+=360}var l=(x+n)/2,s=d?d/(1-Math.abs(2*l-1)):0,e=document.documentElement,bp=c.toLowerCase()=='#f58ab3';e.style.setProperty('--hue',bp?337:Math.round(h));e.style.setProperty('--sat',bp?1:Math.min(1.25,Math.max(.15,s/.87)).toFixed(2));e.style.filter='';e.classList.toggle('dark',!!t.dark)}catch(z){}}
 try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('locked');applyTheme(JSON.parse(localStorage.getItem('qp_theme')||'null'))}catch(e){document.documentElement.classList.add('locked')}</script>
-<link rel="stylesheet" href="css/style.css?v=8">
+<link rel="stylesheet" href="css/style.css?v=9">
 </head>
 <body>
 <div id="lock">
@@ -39,8 +39,33 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
     <input type="file" id="acct-file" accept=".json" hidden onchange="importAccount(this)">
     <p class="msg" id="msg-lock"></p>
   </div>
+  <div id="chat" aria-hidden="true"></div>
 </div>
-<div id="cat" aria-hidden="true">🐈</div>
+<div id="cat" class="s-sit" aria-hidden="true"><svg viewBox="0 0 100 100">
+<g class="tail"><path d="M70 88C98 90 102 60 86 48" fill="none" stroke="#e3cfd8" stroke-width="12" stroke-linecap="round"/><path d="M70 88C98 90 102 60 86 48" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/></g>
+<ellipse cx="50" cy="80" rx="28" ry="20" fill="#fff" stroke="#e3cfd8" stroke-width="2"/>
+<path d="M36 68l3 6 4-5 4 7 3-7 4 6 3-6 4 6 3-6" fill="none" stroke="#e3cfd8" stroke-width="1.5" stroke-linejoin="round"/>
+<ellipse class="pawL" cx="38" cy="95" rx="9" ry="5.5" fill="#fff" stroke="#e3cfd8" stroke-width="2"/>
+<g class="head">
+<path d="M23 34L25 5 44 21z" fill="#fff" stroke="#e3cfd8" stroke-width="2" stroke-linejoin="round"/><path d="M28 28l1-14 10 8z" fill="#ffb3cc"/>
+<path d="M77 34L75 5 56 21z" fill="#fff" stroke="#e3cfd8" stroke-width="2" stroke-linejoin="round"/><path d="M72 28l-1-14-10 8z" fill="#ffb3cc"/>
+<path d="M26 44l-12 3 10 3-9 5 12 1z" fill="#fff" stroke="#e3cfd8" stroke-width="1.8" stroke-linejoin="round"/><path d="M74 44l12 3-10 3 9 5-12 1z" fill="#fff" stroke="#e3cfd8" stroke-width="1.8" stroke-linejoin="round"/>
+<ellipse cx="50" cy="46" rx="28" ry="24" fill="#fff" stroke="#e3cfd8" stroke-width="2"/>
+<path d="M44 24l3 5 3-5 3 5 3-5" fill="none" stroke="#e3cfd8" stroke-width="1.4" stroke-linejoin="round"/>
+<circle cx="33" cy="56" r="4.5" fill="#ffb3cc" opacity=".5"/><circle cx="67" cy="56" r="4.5" fill="#ffb3cc" opacity=".5"/>
+<g class="eyes"><circle cx="40" cy="46" r="3.4" fill="#4a3341"/><circle cx="60" cy="46" r="3.4" fill="#4a3341"/><circle cx="41" cy="45" r="1.1" fill="#fff"/><circle cx="61" cy="45" r="1.1" fill="#fff"/></g>
+<g class="closed" fill="none" stroke="#4a3341" stroke-width="2.2" stroke-linecap="round"><path d="M35 46q5 5 10 0"/><path d="M55 46q5 5 10 0"/></g>
+<g class="hap" fill="none" stroke="#4a3341" stroke-width="2.2" stroke-linecap="round"><path d="M35 48q5-7 10 0"/><path d="M55 48q5-7 10 0"/></g>
+<path d="M46.5 52h7l-3.5 4z" fill="#ff9ebc"/>
+<path class="mouth" d="M50 56q-4 5-8 1M50 56q4 5 8 1" fill="none" stroke="#4a3341" stroke-width="1.6" stroke-linecap="round"/>
+<g class="yawnm"><ellipse cx="50" cy="63" rx="7" ry="8" fill="#e86b8f" stroke="#4a3341" stroke-width="1.5"/><ellipse cx="50" cy="67" rx="4" ry="3" fill="#ff9ebc"/></g>
+<ellipse class="tongue" cx="46" cy="61" rx="3" ry="2.5" fill="#ff7aa2"/>
+<path d="M30 54l-15-4M30 58l-15 2M70 54l15-4M70 58l15 2" stroke="#d9c6d0" stroke-width="1.3" stroke-linecap="round"/>
+</g>
+<g class="pawR"><ellipse cx="62" cy="95" rx="9" ry="5.5" fill="#fff" stroke="#e3cfd8" stroke-width="2"/><path d="M58 94v3M62 94v3M66 94v3" stroke="#e3cfd8" stroke-width="1.2"/></g>
+<g class="zzz" fill="#a58fc7" font-weight="700" font-family="sans-serif"><text x="72" y="24" font-size="13">z</text><text x="80" y="13" font-size="10">z</text></g>
+<g class="hearts" fill="#ff7aa2" font-family="sans-serif"><text x="74" y="26" font-size="14">♥</text><text x="14" y="20" font-size="10">♥</text></g>
+</svg></div>
 <div class="site">
 <header>
   <div>
@@ -144,13 +169,33 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
       <button class="action" onclick="nextVerse()">Another verse ♡</button>
       <a id="vlink" class="mini" href="#" target="_blank" rel="noopener noreferrer" hidden></a>
     </div>
+  <div class="panel center" id="quiz">
+      <h3>🎮 Bible Quizzes</h3>
+      <div id="quiz-menu">
+        <p>Pick a game and test what you know ♡</p>
+        <div class="qgames">
+          <button class="qcard" onclick="startQuiz('trivia')"><b>Bible Trivia</b><small>People, stories &amp; Bible facts</small></button>
+          <button class="qcard" onclick="startQuiz('verse')"><b>Complete the Verse</b><small>Find the missing word</small></button>
+          <button class="qcard" onclick="startQuiz('book')"><b>Guess the Book</b><small>Which book is this verse from?</small></button>
+        </div>
+      </div>
+      <div id="quiz-play" hidden>
+        <p class="qmeta"><span id="q-n"></span><span id="q-score"></span></p>
+        <div class="qbar"><i id="q-bar"></i></div>
+        <p id="q-text" class="qtext"></p>
+        <div id="q-opts"></div>
+        <div id="q-why" hidden></div>
+        <button class="action" id="q-next" onclick="nextQ()" hidden>Next ▶</button>
+        <p><button class="link" onclick="quitQuiz()">Back to games</button></p>
+      </div>
+    </div>
   </section>
 
   <section class="page" id="bible">
     <h2>📖 Bible Study Corner</h2>
     <div class="panel">
       <h3>Open a Bible</h3>
-      <select id="rv" onchange="setVersion(this.value)"></select>
+      <select id="rv"></select>
       <select id="bk" onchange="$('bch').value=1;$('bvs').value=''"></select>
       <input id="bch" type="number" min="1" value="1" placeholder="Chapter">
       <input id="bvs" placeholder="Verses (optional, example 1-6)">
@@ -288,6 +333,6 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
 </div>
 
 <div id="sheet"><div class="sheet-back" onclick="closeSheet()"></div><div class="sheet-panel"><h3 id="sheet-title"></h3><p id="sheet-body" class="full"></p><div class="row" id="sheet-actions"></div></div></div>
-<script src="js/app.js?v=8"></script>
+<script src="js/app.js?v=9"></script>
 </body>
 </html>
