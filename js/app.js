@@ -163,7 +163,9 @@ function add(k) {
   msg.textContent = 'Saved ♡';
   render(k);
 }
-const STICKERS = ['⭐','🕊️','✨','🔥','⛰️','🌿','☀️','🌙','📖','✝️','🙏','⚓','🦁','🌊','💡','🛡️'];
+const STK = {"star":"<svg viewBox=\"0 0 32 32\"><path d=\"M16 4.5l3.2 7.3 7.9.8-5.9 5.3 1.7 7.8L16 21.6l-6.9 4.1 1.7-7.8-5.9-5.3 7.9-.8z\" fill=\"url(#g-b)\" stroke=\"url(#g-b)\" stroke-width=\"3\" stroke-linejoin=\"round\"/><ellipse cx=\"12\" cy=\"11\" rx=\"3.2\" ry=\"1.6\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(-30 12 11)\"/><circle cx=\"13.2\" cy=\"16\" r=\"1.1\" fill=\"#43385a\"/><circle cx=\"18.8\" cy=\"16\" r=\"1.1\" fill=\"#43385a\"/><ellipse cx=\"11.6\" cy=\"18\" rx=\"1.5\" ry=\"1\" fill=\"#ffa6c4\" opacity=\".8\"/><ellipse cx=\"20.4\" cy=\"18\" rx=\"1.5\" ry=\"1\" fill=\"#ffa6c4\" opacity=\".8\"/></svg>","moon":"<svg viewBox=\"0 0 32 32\"><path d=\"M21 4.5A12 12 0 1 0 27.5 22 9.5 9.5 0 0 1 21 4.5z\" fill=\"url(#g-b)\" stroke=\"url(#g-b)\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><ellipse cx=\"10.5\" cy=\"13\" rx=\"2.2\" ry=\"5\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(20 10.5 13)\"/><path d=\"M24 8l1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1z\" fill=\"#fff\"/></svg>","cloud":"<svg viewBox=\"0 0 32 32\"><g fill=\"url(#g-w)\"><circle cx=\"11\" cy=\"19\" r=\"6\"/><circle cx=\"18\" cy=\"15\" r=\"7.5\"/><circle cx=\"24.5\" cy=\"20\" r=\"5\"/><rect x=\"10\" y=\"19\" width=\"15\" height=\"6\" rx=\"3\"/></g><path d=\"M13 12a6 6 0 0 1 4-3\" stroke=\"#fff\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\"/><g fill=\"#9fc3f2\"><path d=\"M12 20l.9 1.8 1.9.3-1.4 1.3.3 1.9-1.7-.9-1.7.9.3-1.9-1.4-1.3 1.9-.3z\"/><path d=\"M21 16l.8 1.6 1.7.3-1.2 1.2.3 1.7-1.6-.8-1.5.8.3-1.7-1.2-1.2 1.7-.3z\"/></g></svg>","heartB":"<svg viewBox=\"0 0 32 32\"><path d=\"M16 27.5C6 20.5 3.5 13.5 7.5 9.5c3-2.8 6.5-1.3 8.5 1.5 2-2.8 5.5-4.3 8.5-1.5 4 4 1.5 11-8.5 18z\" fill=\"url(#g-b)\" stroke=\"url(#g-b)\" stroke-width=\"2\" stroke-linejoin=\"round\"/><ellipse cx=\"10\" cy=\"12\" rx=\"3\" ry=\"1.6\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(-35 10 12)\"/></svg>","heartP":"<svg viewBox=\"0 0 32 32\"><path d=\"M16 27.5C6 20.5 3.5 13.5 7.5 9.5c3-2.8 6.5-1.3 8.5 1.5 2-2.8 5.5-4.3 8.5-1.5 4 4 1.5 11-8.5 18z\" fill=\"url(#g-p)\" stroke=\"url(#g-p)\" stroke-width=\"2\" stroke-linejoin=\"round\"/><ellipse cx=\"10\" cy=\"12\" rx=\"3\" ry=\"1.6\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(-35 10 12)\"/></svg>","paw":"<svg viewBox=\"0 0 32 32\"><g fill=\"url(#g-p)\"><ellipse cx=\"16\" cy=\"21\" rx=\"7.5\" ry=\"6.2\"/><circle cx=\"7\" cy=\"15\" r=\"3.2\"/><circle cx=\"12.5\" cy=\"9.5\" r=\"3.4\"/><circle cx=\"19.5\" cy=\"9.5\" r=\"3.4\"/><circle cx=\"25\" cy=\"15\" r=\"3.2\"/></g><ellipse cx=\"13\" cy=\"18.5\" rx=\"2.6\" ry=\"1.3\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(-30 13 18.5)\"/></svg>","bow":"<svg viewBox=\"0 0 32 32\"><path d=\"M16 16C11 8 4 8.5 5 15.5c1 6.5 7.5 5.5 11 .5z\" fill=\"url(#g-p)\" stroke=\"url(#g-p)\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/><path d=\"M16 16c5-8 12-7.5 11-.5-1 6.5-7.5 5.5-11 .5z\" fill=\"url(#g-p)\" stroke=\"url(#g-p)\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/><path d=\"M14 19l-4 9 4-2.2 2 3.2zM18 19l4 9-4-2.2-2 3.2z\" fill=\"url(#g-p)\" stroke=\"url(#g-p)\" stroke-width=\"1\" stroke-linejoin=\"round\"/><circle cx=\"16\" cy=\"16.5\" r=\"3.4\" fill=\"url(#g-p)\"/><ellipse cx=\"9\" cy=\"12.5\" rx=\"2.4\" ry=\"1.2\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(-30 9 12.5)\"/></svg>","bear":"<svg viewBox=\"0 0 32 32\"><circle cx=\"8\" cy=\"9\" r=\"5\" fill=\"url(#g-t)\"/><circle cx=\"24\" cy=\"9\" r=\"5\" fill=\"url(#g-t)\"/><circle cx=\"8\" cy=\"9\" r=\"2.6\" fill=\"#ffd0b8\"/><circle cx=\"24\" cy=\"9\" r=\"2.6\" fill=\"#ffd0b8\"/><circle cx=\"16\" cy=\"18\" r=\"11.5\" fill=\"url(#g-t)\"/><ellipse cx=\"16\" cy=\"21.5\" rx=\"5.5\" ry=\"4.2\" fill=\"#fff3e4\"/><ellipse cx=\"16\" cy=\"19.8\" rx=\"1.8\" ry=\"1.2\" fill=\"#5a3d3d\"/><circle cx=\"11.5\" cy=\"16\" r=\"1.2\" fill=\"#43385a\"/><circle cx=\"20.5\" cy=\"16\" r=\"1.2\" fill=\"#43385a\"/><ellipse cx=\"9.5\" cy=\"20\" rx=\"1.7\" ry=\"1.1\" fill=\"#ffa6c4\" opacity=\".7\"/><ellipse cx=\"22.5\" cy=\"20\" rx=\"1.7\" ry=\"1.1\" fill=\"#ffa6c4\" opacity=\".7\"/><ellipse cx=\"11\" cy=\"11.5\" rx=\"3.4\" ry=\"1.7\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(-30 11 11.5)\"/></svg>","strawberry":"<svg viewBox=\"0 0 32 32\"><path d=\"M16 29.5C8 25.5 4.5 18 7.5 13 11 8.5 21 8.5 24.5 13c3 5-.5 12.5-8.5 16.5z\" fill=\"url(#g-r)\"/><path d=\"M9.5 11.5l6.5-4 6.5 4-3.2.6-3.3-2.4-3.3 2.4z\" fill=\"url(#g-g)\" stroke=\"url(#g-g)\" stroke-width=\"1.2\" stroke-linejoin=\"round\"/><g fill=\"#fff\" opacity=\".85\"><circle cx=\"12\" cy=\"16\" r=\".8\"/><circle cx=\"17\" cy=\"15\" r=\".8\"/><circle cx=\"21\" cy=\"18\" r=\".8\"/><circle cx=\"14\" cy=\"21\" r=\".8\"/><circle cx=\"19\" cy=\"23\" r=\".8\"/><circle cx=\"10\" cy=\"20\" r=\".8\"/></g><ellipse cx=\"11.5\" cy=\"14\" rx=\"2.6\" ry=\"1.3\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(-30 11.5 14)\"/></svg>","tulip":"<svg viewBox=\"0 0 32 32\"><path d=\"M16 27c-6 0-9.5-3-10.5-8 6 0 9.5 3 10.5 8z\" fill=\"url(#g-g)\"/><path d=\"M16 17v11.5\" stroke=\"#8bc47a\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M8.5 5.5c-.5 8 1.5 13.5 7.5 13.5s8-5.5 7.5-13.5l-4.5 3.5-3-4-3 4z\" fill=\"url(#g-b)\" stroke=\"url(#g-b)\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/><ellipse cx=\"12\" cy=\"12\" rx=\"1.6\" ry=\"3.2\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(15 12 12)\"/></svg>","wings":"<svg viewBox=\"0 0 32 32\"><path d=\"M15 24.5C8 26 1.5 20.5 2.5 8.5c6.5 1 10.5 4.5 12.5 10z\" fill=\"url(#g-w)\" stroke=\"url(#g-w)\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M17 24.5c7 1.5 13.5-4 12.5-16-6.5 1-10.5 4.5-12.5 10z\" fill=\"url(#g-w)\" stroke=\"url(#g-w)\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M12 21c-4-.5-7-3-8-8M20 21c4-.5 7-3 8-8\" stroke=\"#d9cde6\" stroke-width=\"1.1\" fill=\"none\" stroke-linecap=\"round\"/><ellipse cx=\"8\" cy=\"12\" rx=\"2.6\" ry=\"1.3\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(40 8 12)\"/></svg>","cross":"<svg viewBox=\"0 0 32 32\"><rect x=\"12\" y=\"4\" width=\"8\" height=\"24\" rx=\"3.4\" fill=\"url(#g-y)\"/><rect x=\"5\" y=\"10.5\" width=\"22\" height=\"8\" rx=\"3.4\" fill=\"url(#g-y)\"/><ellipse cx=\"14.5\" cy=\"9\" rx=\"1.4\" ry=\"3.6\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(0 14.5 9)\"/></svg>","bolt":"<svg viewBox=\"0 0 32 32\"><path d=\"M18.5 3L7.5 18h7.5l-2 11L24.5 13.5H17z\" fill=\"url(#g-y)\" stroke=\"url(#g-y)\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><ellipse cx=\"13\" cy=\"11\" rx=\"1.4\" ry=\"3.6\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(30 13 11)\"/></svg>","shield":"<svg viewBox=\"0 0 32 32\"><path d=\"M16 4l10.5 3.8v7.2c0 6.8-4.8 11.4-10.5 13.2C10.3 26.4 5.5 21.8 5.5 15V7.8z\" fill=\"url(#g-b)\" stroke=\"url(#g-b)\" stroke-width=\"2\" stroke-linejoin=\"round\"/><path d=\"M16 9.5v12M10.5 14.5h11\" stroke=\"#fff\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><ellipse cx=\"10\" cy=\"9\" rx=\"2.4\" ry=\"1.3\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(-20 10 9)\"/></svg>","mountain":"<svg viewBox=\"0 0 32 32\"><path d=\"M2.5 27L12.5 9l5 8.2 3.6-5.2L29.5 27z\" fill=\"url(#g-g)\" stroke=\"url(#g-g)\" stroke-width=\"2\" stroke-linejoin=\"round\"/><path d=\"M12.5 9l-3.3 6 2.4-1 1.8 1.8 1.4-1.8 1.8 1z\" fill=\"#fff\"/></svg>","flame":"<svg viewBox=\"0 0 32 32\"><path d=\"M16 3.5c1.2 6 8.5 9.5 8.5 17a8.5 8.5 0 0 1-17 0c0-4 2.2-6.5 3.4-8.6 1 3 2 4 3.2 4.2-.4-5-1.2-8.2 1.9-12.6z\" fill=\"url(#g-o)\" stroke=\"url(#g-o)\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M16 18c-3.2 3-4.4 5.4-2.4 8.3a4.5 4.5 0 0 0 8.2-3c0-2.4-2.2-4.2-3.2-6.4-.7 1.6-1.4 2.2-2.6 1.1z\" fill=\"url(#g-y)\"/><ellipse cx=\"11.5\" cy=\"20\" rx=\"1.6\" ry=\"3\" fill=\"#fff\" opacity=\".7\" transform=\"rotate(10 11.5 20)\"/></svg>"};
+const STICKERS = Object.keys(STK);
+function stkEl(id) { const s = document.createElement('span'); s.className = 'stk'; if (STK[id]) s.innerHTML = STK[id]; else s.textContent = id; return s; }
 function patch(k, id, fn) { const a = load(k), it = a.find(x => x.id === id); if (it) fn(it); save(k, a); render(k); }
 function setPrayer(k, id, done, date) {
   const a = load(k), it = a.find(x => x.id === id);
@@ -208,31 +210,67 @@ function card(k, it) {
   }
   const {title, text, meta} = describe(k, it); // compact row: tap it to open the drawer
   const main = document.createElement('div'); main.className = 'rc-main';
-  const h = document.createElement('h4'); h.textContent = (it.st ? it.st + ' ' : '') + title; main.appendChild(h);
+  const h = document.createElement('h4'); h.textContent = title; if (it.st) h.prepend(stkEl(it.st)); main.appendChild(h);
   if (meta) { const sm = document.createElement('small'); sm.textContent = meta; main.appendChild(sm); }
   if (text) { const pk = document.createElement('p'); pk.className = 'peek'; pk.textContent = text; main.appendChild(pk); }
   const t = document.createElement('button'); t.className = 'mini trash'; t.title = 'Delete'; t.setAttribute('aria-label', 'Delete'); t.textContent = '\ud83d\uddd1';
   t.onclick = e => { e.stopPropagation(); remove(k, it.id); };
+  const ed = document.createElement('button'); ed.className = 'mini trash'; ed.title = 'Edit'; ed.setAttribute('aria-label', 'Edit'); ed.textContent = '✎';
+  ed.onclick = e => { e.stopPropagation(); openSheet(k, it); editEntry(k, it); };
   if (k === 'prayers') {
     const a = document.createElement('button'); a.className = 'mini trash'; a.title = it.done ? 'Back to requests' : 'Mark as answered'; a.setAttribute('aria-label', a.title); a.textContent = it.done ? '↩' : '✓';
     a.onclick = e => { e.stopPropagation(); setPrayer(k, it.id, !it.done, today()); };
-    d.append(main, a, t);
-  } else d.append(main, t);
+    d.append(main, a, ed, t);
+  } else d.append(main, ed, t);
   d.tabIndex = 0; d.setAttribute('role', 'button');
   d.onclick = () => openSheet(k, it);
   d.onkeydown = e => { if (e.key === 'Enter' && e.target === d) openSheet(k, it); };
   return d;
 }
 let sheetTimer = null;
+const EDIT = {
+  bible: [['Passage', 'input', 0], ['Thoughts', 'area', 1]],
+  calendar: [['Date of my devotion', 'date', 0], ['Bible reading', 'input', 1], ['What God showed me', 'area', 2]],
+  prayers: [['Title of this prayer', 'input', 2], ['Prayer', 'area', 0], ['Date of this request', 'date', 1]],
+  notes: [['Title', 'input', 0], ['Note', 'area', 1]]
+};
+function editEntry(k, it) { // fix a typo: the drawer turns into the same fields you typed in
+  const r = $('sheet-actions'), body = $('sheet-body');
+  let box = $('sheet-edit');
+  if (!box) { box = document.createElement('div'); box.id = 'sheet-edit'; body.parentNode.insertBefore(box, body); }
+  box.textContent = ''; box.hidden = false; body.hidden = true;
+  if ($('sheet-stk')) $('sheet-stk').hidden = true;
+  const fields = EDIT[k].map(([label, type, i]) => {
+    const l = document.createElement('label'); l.className = 'lbl'; l.textContent = label;
+    const f = document.createElement(type === 'area' ? 'textarea' : 'input');
+    if (type === 'date') f.type = 'date'; if (type === 'area') f.style.minHeight = '140px';
+    f.value = (it.v[i] || '').trim(); box.append(l, f); return [i, f];
+  });
+  const msg = document.createElement('p'); msg.className = 'msg'; box.appendChild(msg);
+  r.textContent = '';
+  const ok = document.createElement('button'); ok.className = 'action'; ok.textContent = 'Save changes ♡';
+  ok.onclick = () => {
+    const vals = it.v.slice(); while (vals.length < 3) vals.push('');
+    fields.forEach(([i, f]) => { vals[i] = f.value.trim(); });
+    if (!REQ[k].some(i => vals[i])) { msg.textContent = 'Write something first ♡'; return; }
+    patch(k, it.id, x => { x.v = vals; });
+    openSheet(k, load(k).find(x => x.id === it.id));
+  };
+  const no = document.createElement('button'); no.className = 'mini'; no.textContent = 'Cancel'; no.onclick = () => openSheet(k, load(k).find(x => x.id === it.id) || it);
+  r.append(ok, no);
+  const first = box.querySelector('textarea, input'); if (first) first.focus();
+}
 function openSheet(k, it) {
   const {title, text, meta} = describe(k, it), r = $('sheet-actions'), s = $('sheet');
-  $('sheet-title').textContent = (it.st ? it.st + ' ' : '') + title;
+  if ($('sheet-edit')) $('sheet-edit').hidden = true;
+  $('sheet-body').hidden = false; if ($('sheet-stk')) $('sheet-stk').hidden = false;
+  $('sheet-title').textContent = title; if (it.st) $('sheet-title').prepend(stkEl(it.st));
   $('sheet-body').textContent = (meta ? meta + '\n\n' : '') + (text || '(nothing written)');
   let st = $('sheet-stk');
   if (!st) { st = document.createElement('div'); st.id = 'sheet-stk'; r.parentNode.insertBefore(st, r); }
   st.textContent = '';
   STICKERS.forEach(e => {
-    const b = document.createElement('button'); b.textContent = e; b.className = it.st === e ? 'on' : ''; b.title = 'Sticker / bookmark';
+    const b = document.createElement('button'); b.appendChild(stkEl(e)); b.className = it.st === e ? 'on' : ''; b.title = 'Sticker / bookmark';
     b.onclick = () => { patch(k, it.id, x => { x.st = x.st === e ? '' : e; }); openSheet(k, load(k).find(x => x.id === it.id)); };
     st.appendChild(b);
   });
@@ -245,8 +283,9 @@ function openSheet(k, it) {
   }
   if (k === 'prayers' && it.done) { const cd = document.createElement('button'); cd.className = 'mini'; cd.textContent = 'Change answered date'; cd.onclick = () => answerForm(r, k, it.id); r.appendChild(cd); }
   const x = document.createElement('button'); x.className = 'mini'; x.textContent = 'Delete'; x.onclick = () => remove(k, it.id);
+  const ed = document.createElement('button'); ed.className = 'mini'; ed.textContent = '✎ Edit'; ed.onclick = () => editEntry(k, it);
   const c = document.createElement('button'); c.className = 'mini'; c.textContent = 'Close'; c.onclick = closeSheet;
-  r.append(x, c);
+  r.append(ed, x, c);
   clearTimeout(sheetTimer);
   s.classList.add('show');
   setTimeout(() => s.classList.add('open'), 20);
@@ -559,18 +598,31 @@ function nextQ() {
 
 // ---- Review bubbles on the login screen ----
 const REVIEWS = ["I love the colors and design also the devotion reminder.", "This is so cute", "I like that I can change the color and theme of the website.", "I like the part where in I can put a song link and it plays the song while I can still write my devotions while the song is playing.", "I like the Bible Study cause you can literally learn the content of the scripture. More improvement to the website."];
-let chatI = 0;
-function chatLoop() {
+let chatI = 0; const usedSlots = new Set();
+function chatLoop() { // review bubbles pop up all around the login box, then fade away
   const box = $('chat');
-  if (!document.documentElement.classList.contains('locked')) { box.textContent = ''; setTimeout(chatLoop, 1500); return; }
-  const b = document.createElement('div'), s = document.createElement('small'), p = document.createElement('p'), text = REVIEWS[chatI++ % REVIEWS.length], hold = 3600 + text.length * 45;
+  if (!document.documentElement.classList.contains('locked')) { box.textContent = ''; usedSlots.clear(); setTimeout(chatLoop, 1500); return; }
+  const lb = document.querySelector('.lockbox').getBoundingClientRect(), W = innerWidth, H = innerHeight, fl = lb.left - 24, fr = W - lb.right - 24;
+  const slots = [];
+  if (fl >= 190) [.07, .28, .5, .74].forEach(t => slots.push([0, t]));
+  if (fr >= 190) [.13, .36, .6, .8].forEach(t => slots.push([1, t]));
+  if (!slots.length) [.03, .9].forEach(t => slots.push([2, t]));
+  const free = slots.map((s, i) => i).filter(i => !usedSlots.has(i));
+  if (!free.length || box.children.length >= 3) { setTimeout(chatLoop, 900); return; }
+  const si = free[rnd(free.length)], col = slots[si][0], text = REVIEWS[chatI++ % REVIEWS.length], hold = 3600 + text.length * 45;
+  const room = col === 0 ? fl : col === 1 ? fr : W - 24, w = Math.min(320, room - 8);
+  const b = document.createElement('div'), s = document.createElement('small'), p = document.createElement('p');
+  b.className = 'bubble'; b.style.width = w + 'px'; b.style.setProperty('--rot', (rnd(5) - 2) + 'deg');
+  b.style.left = (col === 0 ? 12 + rnd(Math.max(1, fl - w - 12)) : col === 1 ? lb.right + 24 + rnd(Math.max(1, fr - w - 8)) : (W - w) / 2) + 'px';
+  b.style.top = Math.round(slots[si][1] * H + rnd(26)) + 'px';
+  usedSlots.add(si);
   s.textContent = '💬 Review'; p.className = 'dots';
   for (let i = 0; i < 3; i++) p.appendChild(document.createElement('i'));
-  b.className = 'bubble'; b.append(s, p); box.appendChild(b);
+  b.append(s, p); box.appendChild(b);
   setTimeout(() => { p.className = ''; p.textContent = text; }, 1100);
   setTimeout(() => b.classList.add('out'), 1100 + hold);
-  setTimeout(() => b.remove(), 1700 + hold);
-  setTimeout(chatLoop, 1100 + hold);
+  setTimeout(() => { b.remove(); usedSlots.delete(si); }, 1700 + hold);
+  setTimeout(chatLoop, 1700 + rnd(1600));
 }
 
 // ---- Username warning, cat friend and cat cursor ----
@@ -610,8 +662,8 @@ function tickCat(t) {
   else if (!cat.idleSince) { cat.idleSince = t; cat.next = t + 1500; }
   else if (cat.state !== 'sit' && t > cat.until) { catState('sit'); cat.next = t + 2200 + Math.random() * 2800; }
   else if (cat.state === 'sit' && t > cat.next) {
-    const pick = t - cat.idleSince > 12000 && Math.random() < .5 ? 'sleep' : ['lick', 'yawn', 'happy', 'lick'][rnd(4)];
-    catState(pick); cat.until = t + ({lick:3600, yawn:2600, happy:2600, sleep:9000})[pick];
+    const pick = t - cat.idleSince > 12000 && Math.random() < .5 ? 'sleep' : ['yawn', 'happy', 'curious', 'happy'][rnd(4)];
+    catState(pick); cat.until = t + ({curious:2800, yawn:2600, happy:2600, sleep:9000})[pick];
   }
   $('cat').style.transform = 'translate(' + cat.x + 'px,' + cat.y + 'px)';
   requestAnimationFrame(tickCat);
