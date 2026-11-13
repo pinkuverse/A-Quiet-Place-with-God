@@ -194,3 +194,18 @@ html.dark .qopt{background:#241820}
 #cat.s-sleep .head{transform:translateY(3px) rotate(4deg);transform-origin:50px 70px}
 #cat.s-sleep .zzz,#cat.s-happy .hearts{display:inline;animation:zz 1.8s ease-in-out infinite}
 @keyframes zz{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-5px);opacity:1}}
+
+/* Round 6: soft 3D cat, puffy stickers, scattered review bubbles */
+#cat .q{display:none}
+#cat.s-curious .head{transform:rotate(-9deg);transform-origin:50px 72px}
+#cat.s-curious .q{display:inline;animation:zz 1.4s ease-in-out infinite}
+#cat.s-curious .eyes{animation:none}
+#cat svg{filter:drop-shadow(0 2px 2px #8a5a8a40)}
+.stk{display:inline-block;width:1.35em;height:1.35em;vertical-align:-.3em;margin-right:.3em}
+.stk svg{display:block;width:100%;height:100%;filter:drop-shadow(0 1px 1.2px #6a4a8a55)}
+#sheet-stk button{padding:3px 5px;line-height:0}
+#sheet-stk .stk{width:30px;height:30px;margin:0}
+#chat{left:0;top:0;right:0;bottom:0;width:auto;display:block;transform:none;overflow:hidden}
+.bubble{position:absolute;transform:rotate(var(--rot,0deg))}
+.bubble.out{opacity:0;transform:translateY(10px) rotate(var(--rot,0deg))}
+@keyframes bpop{from{opacity:0;transform:translateY(14px) scale(.88) rotate(var(--rot,0deg))}to{opacity:1;transform:rotate(var(--rot,0deg))}}
