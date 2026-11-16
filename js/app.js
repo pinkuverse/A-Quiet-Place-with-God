@@ -509,7 +509,7 @@ const STOP = new Set(['shall','which','their','these','those','there','unto','th
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const k = rnd(i + 1); [a[i], a[k]] = [a[k], a[i]]; } return a; };
 const section = b => b < 5 ? 'a book of the Law (Old Testament)' : b < 17 ? 'a history book (Old Testament)' : b < 22 ? 'a wisdom and poetry book (Old Testament)' : b < 27 ? 'a Major Prophets book (Old Testament)' : b < 39 ? 'a Minor Prophets book (Old Testament)' : b < 43 ? 'a Gospel (New Testament)' : b === 43 ? 'the story of the early church (New Testament)' : b < 57 ? "one of Paul's letters (New Testament)" : b < 65 ? 'one of the General Letters (New Testament)' : 'the book of prophecy that closes the New Testament';
 const vref = v => v[0] + ' ' + v[1] + ':' + v[2] + (v[3] ? '-' + v[3] : '');
-const word = w => w.replace(/[^A-Za-z']/g, '');
+const word = w => w.replace(/[^A-Za-z'’]/g, '');
 const goodWord = w => word(w).length >= 5 && !STOP.has(word(w).toLowerCase());
 const others = (b, same) => shuffle(BOOKS.map((n, i) => i).filter(i => i !== b && (!same || (i >= 39) === (b >= 39)))).slice(0, 3).map(i => BOOKS[i]);
 function triviaQ() {
@@ -634,7 +634,7 @@ const catOn = () => LS.get('qp_cat') !== '0';
 const setCatClass = () => document.documentElement.classList.toggle('nocat', !catOn());
 function setCat() { LS.set('qp_cat', $('cat-on').checked ? '1' : '0'); setCatClass(); placeCat(); }
 const cat = {x:0, y:0, tx:0, ty:0, side:0, seen:false, state:'sit', until:0, next:0, idleSince:0, last:0};
-const CAT = 72;
+const CAT = 112;
 function catState(s) { if (cat.state !== s) { cat.state = s; $('cat').className = 's-' + s; } }
 function placeCat() {
   const r = document.querySelector('.site').getBoundingClientRect(), W = innerWidth, L = r.left, R = W - r.right, need = CAT + 20, el = $('cat');
