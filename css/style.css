@@ -209,3 +209,15 @@ html.dark .qopt{background:#241820}
 .bubble{position:absolute;transform:rotate(var(--rot,0deg))}
 .bubble.out{opacity:0;transform:translateY(10px) rotate(var(--rot,0deg))}
 @keyframes bpop{from{opacity:0;transform:translateY(14px) scale(.88) rotate(var(--rot,0deg))}to{opacity:1;transform:rotate(var(--rot,0deg))}}
+
+/* Round 7: fluffy white sitting cat (smooth version of the pixel reference) */
+#cat{width:88px;height:88px}
+#cat .tail{transform-origin:34px 92px}
+#cat.s-curious .head{transform:rotate(-8deg);transform-origin:50px 58px}
+#cat.s-sleep .head{transform:translateY(3px) rotate(4deg);transform-origin:50px 58px}
+#cat.s-yawn .head{transform:translateY(-1.5px)}
+
+/* Round 8: realistic fluffy cat, bigger so the fur shows */
+#cat{width:112px;height:112px}
+#cat.s-curious .head{transform:rotate(-8deg);transform-origin:50px 46px}
+#cat.s-sleep .head{transform:translateY(3px) rotate(4deg);transform-origin:50px 46px}
