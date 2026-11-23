@@ -1,9 +1,9 @@
 // A Quiet Place with God - scripts
 const $ = id => document.getElementById(id);
-const FIELDS = {bible:2, calendar:3, prayers:3, worship:2, notes:2};
-const REQ = {bible:[0,1], calendar:[1,2], prayers:[0], worship:[1], notes:[0,1]};
-const NAMES = {bible:'study', calendar:'devotion', prayers:'prayer', worship:'song', notes:'note'};
-const DRAFTS = ['bible1','bible2','calendar1','calendar2','calendar3','prayers1','prayers2','prayers3','worship1','worship2','notes1','notes2','sp-q'];
+const FIELDS = {inductive:5, bible:2, calendar:3, prayers:3, worship:2, notes:2};
+const REQ = {inductive:[0,1,2,3], bible:[0,1], calendar:[1,2], prayers:[0], worship:[1], notes:[0,1]};
+const NAMES = {inductive:'study', bible:'study', calendar:'devotion', prayers:'prayer', worship:'song', notes:'note'};
+const DRAFTS = ['inductive1','inductive2','inductive3','inductive4','inductive5','bible1','bible2','calendar1','calendar2','calendar3','prayers1','prayers2','prayers3','worship1','worship2','notes1','notes2','sp-q'];
 const USERNAME = /^[\p{L}\p{N}._-]{3,20}$/u;
 
 // ---- Browser storage helpers (nothing leaves this browser) ----
@@ -160,6 +160,7 @@ function add(k) {
   for (let i = 1; i <= FIELDS[k]; i++) $(k + i).value = '';
   ['calendar1', 'prayers2'].forEach(i => { if (!$(i).value) $(i).value = today(); });
   saveDraft();
+  if (k === 'inductive') ibCard();
   msg.textContent = 'Saved ♡';
   render(k);
 }
@@ -184,6 +185,11 @@ function answerForm(r, k, id) {
 }
 
 function describe(k, it) {
+  if (k === 'inductive') {
+    const [ref, obs, q, quote, scr] = it.v;
+    const full = [scr && '📖 Scripture\n' + scr, obs && '🔍 Observation\n' + obs, q && '❓ Questions\n' + q, quote && '💡 Timeless Discipline\n“' + quote + '”'].filter(Boolean).join('\n\n');
+    return {title: ref || 'Inductive study', text: quote ? '“' + quote + '”' : (obs || scr || ''), full};
+  }
   const [a, b, c] = it.v;
   if (k === 'bible' || k === 'notes') return {title: a || 'Untitled', text: b};
   if (k === 'calendar') return {title: (b || 'Devotion') + (a ? ' \u00b7 ' + fmt(a) : ''), text: c};
@@ -232,13 +238,14 @@ const EDIT = {
   bible: [['Passage', 'input', 0], ['Thoughts', 'area', 1]],
   calendar: [['Date of my devotion', 'date', 0], ['Bible reading', 'input', 1], ['What God showed me', 'area', 2]],
   prayers: [['Title of this prayer', 'input', 2], ['Prayer', 'area', 0], ['Date of this request', 'date', 1]],
-  notes: [['Title', 'input', 0], ['Note', 'area', 1]]
+  notes: [['Title', 'input', 0], ['Note', 'area', 1]],
+  inductive: [['Scripture', 'input', 0], ['Scripture text', 'area', 4], ['Observation', 'area', 1], ['Questions', 'area', 2], ['Timeless Discipline (my own quote)', 'area', 3]]
 };
 function editEntry(k, it) { // fix a typo: the drawer turns into the same fields you typed in
   const r = $('sheet-actions'), body = $('sheet-body');
   let box = $('sheet-edit');
   if (!box) { box = document.createElement('div'); box.id = 'sheet-edit'; body.parentNode.insertBefore(box, body); }
-  box.textContent = ''; box.hidden = false; body.hidden = true;
+  box.textContent = ''; box.hidden = false; body.hidden = true; if ($('sheet-quote')) $('sheet-quote').hidden = true;
   if ($('sheet-stk')) $('sheet-stk').hidden = true;
   const fields = EDIT[k].map(([label, type, i]) => {
     const l = document.createElement('label'); l.className = 'lbl'; l.textContent = label;
@@ -250,7 +257,7 @@ function editEntry(k, it) { // fix a typo: the drawer turns into the same fields
   r.textContent = '';
   const ok = document.createElement('button'); ok.className = 'action'; ok.textContent = 'Save changes ♡';
   ok.onclick = () => {
-    const vals = it.v.slice(); while (vals.length < 3) vals.push('');
+    const vals = it.v.slice(); while (vals.length < 5) vals.push('');
     fields.forEach(([i, f]) => { vals[i] = f.value.trim(); });
     if (!REQ[k].some(i => vals[i])) { msg.textContent = 'Write something first ♡'; return; }
     patch(k, it.id, x => { x.v = vals; });
@@ -261,11 +268,13 @@ function editEntry(k, it) { // fix a typo: the drawer turns into the same fields
   const first = box.querySelector('textarea, input'); if (first) first.focus();
 }
 function openSheet(k, it) {
-  const {title, text, meta} = describe(k, it), r = $('sheet-actions'), s = $('sheet');
+  const {title, text, meta, full} = describe(k, it), r = $('sheet-actions'), s = $('sheet');
   if ($('sheet-edit')) $('sheet-edit').hidden = true;
   $('sheet-body').hidden = false; if ($('sheet-stk')) $('sheet-stk').hidden = false;
+  let qc = $('sheet-quote'); if (!qc) { qc = document.createElement('div'); qc.id = 'sheet-quote'; qc.className = 'quote-card'; $('sheet-body').parentNode.insertBefore(qc, $('sheet-body')); }
+  qc.hidden = !(k === 'inductive' && it.v[3]); if (!qc.hidden) fillQuote(qc, it.v[3], it.v[0]);
   $('sheet-title').textContent = title; if (it.st) $('sheet-title').prepend(stkEl(it.st));
-  $('sheet-body').textContent = (meta ? meta + '\n\n' : '') + (text || '(nothing written)');
+  $('sheet-body').textContent = (meta ? meta + '\n\n' : '') + (full || text || '(nothing written)');
   let st = $('sheet-stk');
   if (!st) { st = document.createElement('div'); st.id = 'sheet-stk'; r.parentNode.insertBefore(st, r); }
   st.textContent = '';
@@ -372,7 +381,7 @@ function logout() {
 }
 function deleteProfile() {
   if (!confirm('Delete this account and all its entries from this device? This cannot be undone.')) return;
-  Object.keys(FIELDS).concat('version', 'theme', 'draft').forEach(k => LS.del(key(k)));
+  Object.keys(FIELDS).concat('version', 'theme', 'draft', 'events').forEach(k => LS.del(key(k)));
   saveUsers(users().filter(u => idOf(u) !== uid));
   logout();
 }
@@ -381,6 +390,7 @@ function deleteProfile() {
 function exportData() {
   const data = {}, u = me();
   Object.keys(FIELDS).forEach(k => data[k] = load(k));
+  data.events = load('events');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([JSON.stringify({app:'quiet-place', v:2, account:{id:idOf(u), name:u.name, display:u.display || u.name, h:u.h || null}, data, theme:theme(), version:version()})], {type:'application/json'}));
   a.download = 'quiet-place-' + u.name.replace(/\W+/g, '-') + '-' + today() + '.json';
@@ -397,6 +407,7 @@ function importData(input) {
     try {
       const d = JSON.parse(r.result).data;
       Object.keys(FIELDS).forEach(k => { if (Array.isArray(d[k])) save(k, d[k]); });
+      if (Array.isArray(d.events)) save('events', d.events);
       Object.keys(FIELDS).forEach(render);
       $('msg-data').textContent = 'Backup restored ♡';
     } catch (e) { $('msg-data').textContent = "That file doesn't look like a backup."; }
@@ -417,7 +428,10 @@ function startSession(id) {
   Object.keys(FIELDS).forEach(render);
   restoreDraft();
   $('rv').value = version();
+  $('ib-ver').value = version();
+  calInit();
   showVerse();
+  placeCat();
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 }
 function screen(n) {
@@ -464,6 +478,7 @@ function importAccount(input) {
       saveUsers(users().filter(u => idOf(u) !== a.id).concat({id:a.id, name, display:a.display || a.name, h:a.h || null}));
       const prev = uid; uid = a.id;
       Object.keys(FIELDS).forEach(k => { if (Array.isArray(d.data[k])) save(k, d.data[k]); });
+      if (Array.isArray(d.data.events)) save('events', d.data.events);
       if (d.theme) LS.set(key('theme'), JSON.stringify(d.theme));
       if (d.version) LS.set(key('version'), d.version);
       uid = prev;
@@ -625,6 +640,101 @@ function chatLoop() { // review bubbles pop up all around the login box, then fa
   setTimeout(chatLoop, 1700 + rnd(1600));
 }
 
+// ---- Inductive Bible study ----
+function fillQuote(el, quote, ref) { el.textContent = '“' + quote + '”'; if (ref) { const s = document.createElement('small'); s.textContent = '— ' + ref; el.appendChild(s); } }
+function ibCard() { const q = $('inductive4').value.trim(), c = $('ib-card'); c.hidden = !q; if (q) fillQuote(c, q, $('inductive1').value.trim()); }
+document.addEventListener('input', e => { if (e.target.id === 'inductive4' || e.target.id === 'inductive1') ibCard(); });
+async function ibLoad() {
+  const bi = +$('ib-bk').value, c = +$('ib-ch').value || 1, vs = $('ib-vs').value.trim(), ver = $('ib-ver').value, m = $('msg-inductive');
+  const ref = BOOKS[bi] + ' ' + c + (vs ? ':' + vs : '');
+  $('inductive1').value = ref + ' (' + ver + ')';
+  if (!BUNDLED[ver]) { m.textContent = 'The ' + ver + ' is copyrighted, so it opens on BibleGateway. Read it there, then type or paste the verses into the box below ♡'; window.open(passageUrl(ref, ver), '_blank', 'noopener'); saveDraft(); ibCard(); return; }
+  m.textContent = 'Loading…';
+  try {
+    const d = await bible(ver), chap = d[bi].chapters[c - 1];
+    if (!chap) { m.textContent = BOOKS[bi] + ' has ' + d[bi].chapters.length + ' chapters.'; return; }
+    const r = /^(\d+)(?:\s*-\s*(\d+))?$/.exec(vs), from = r ? +r[1] : 1, to = r ? +(r[2] || r[1]) : chap.length;
+    $('inductive5').value = chap.map((t, i) => [i + 1, t]).filter(([n]) => n >= from && n <= to).map(([n, t]) => n + ' ' + t).join('\n');
+    m.textContent = ''; saveDraft(); ibCard();
+  } catch (e) { m.textContent = "Couldn't load the Bible text. Check your connection and try again."; }
+}
+
+// ---- Calendar with events (color, pattern and sticker per event) ----
+const PATS = {"none": {"img": "none", "sz": "auto"}, "dots": {"img": "radial-gradient(circle,#ffffffb8 22%,transparent 24%)", "sz": "7px 7px"}, "stripes": {"img": "repeating-linear-gradient(45deg,#ffffff80 0 3px,transparent 3px 7px)", "sz": "auto"}, "checks": {"img": "conic-gradient(#ffffff70 25%,transparent 0 50%,#ffffff70 0 75%,transparent 0)", "sz": "9px 9px"}, "hearts": {"img": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13'%3E%3Cpath d='M6.5 11C1.6 7.6 1.5 4.4 3.5 3.4 5 2.7 6.1 3.5 6.5 4.5 6.9 3.5 8 2.7 9.5 3.4c2 1 1.9 4.2-3 7.6z' fill='white' fill-opacity='.8'/%3E%3C/svg%3E\")", "sz": "13px 13px"}, "stars": {"img": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13'%3E%3Cpath d='M6.5 2l1.2 2.7 2.9.3-2.2 1.9.6 2.9-2.5-1.5-2.5 1.5.6-2.9-2.2-1.9 2.9-.3z' fill='white' fill-opacity='.85'/%3E%3C/svg%3E\")", "sz": "13px 13px"}, "waves": {"img": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3E%3Cpath d='M0 4q3.5-4 7 0t7 0' fill='none' stroke='white' stroke-opacity='.8' stroke-width='1.4'/%3E%3C/svg%3E\")", "sz": "14px 8px"}};
+const COLORS = {"mist": "#dfe6f2", "rose": "#ffc9de", "peach": "#ffd9b8", "butter": "#fff0a8", "mint": "#c9efd6", "sky": "#c4e0fb", "lavender": "#e0d2fa", "coral": "#ffb3b3", "sea": "#a8e3e0"};
+const calPad = n => String(n).padStart(2, '0');
+const evList = () => load('events');
+const cal = {y:0, m:0, sel:'', edit:null, ev:{c:'mist', p:'none', s:''}};
+function styleEv(el, c, p) { const q = PATS[p] || PATS.none; el.style.setProperty('--c', COLORS[c] || COLORS.mist); el.style.setProperty('--pat', q.img); el.style.setProperty('--sz', q.sz); }
+function evChip(e) {
+  const s = document.createElement('span'); s.className = 'ev'; styleEv(s, e.c, e.p);
+  if (e.s) s.appendChild(stkEl(e.s));
+  s.append((e.t ? e.t + ' ' : '') + e.n); return s;
+}
+function calInit() {
+  const n = new Date(); cal.y = n.getFullYear(); cal.m = n.getMonth(); cal.sel = today();
+  if (!$('ev-colors').children.length) {
+    const add = (box, key, cls, label, fn) => { const b = document.createElement('button'); b.className = cls; b.title = label; b.dataset.k = key; fn(b); b.onclick = () => { cal.ev[box.dataset.w] = key; refreshEv(); }; box.appendChild(b); };
+    $('ev-colors').dataset.w = 'c'; $('ev-pats').dataset.w = 'p'; $('ev-stks').dataset.w = 's';
+    Object.keys(COLORS).forEach(k => add($('ev-colors'), k, 'cc', k, b => { b.style.background = COLORS[k]; }));
+    Object.keys(PATS).forEach(k => add($('ev-pats'), k, 'pp', k, b => {}));
+    add($('ev-stks'), '', 'ss', 'no sticker', b => { b.textContent = '✕'; });
+    STICKERS.forEach(k => add($('ev-stks'), k, 'ss', k, b => { b.appendChild(stkEl(k)); }));
+  }
+  resetEv(); renderCal(); ibCard();
+}
+function refreshEv() {
+  document.querySelectorAll('#ev-colors button').forEach(b => b.classList.toggle('on', b.dataset.k === cal.ev.c));
+  document.querySelectorAll('#ev-pats button').forEach(b => { b.classList.toggle('on', b.dataset.k === cal.ev.p); styleEv(b, cal.ev.c, b.dataset.k); });
+  document.querySelectorAll('#ev-stks button').forEach(b => b.classList.toggle('on', b.dataset.k === cal.ev.s));
+}
+function resetEv() {
+  cal.edit = null; cal.ev = {c:'mist', p:'none', s:''}; $('ev-title').value = ''; $('ev-time').value = '';
+  $('ev-save').textContent = 'Add to calendar ♡'; $('ev-cancel').hidden = true; $('msg-ev').textContent = ''; refreshEv();
+}
+function calMove(d) { cal.m += d; if (cal.m < 0) { cal.m = 11; cal.y--; } if (cal.m > 11) { cal.m = 0; cal.y++; } renderCal(); }
+function calToday() { const n = new Date(); cal.y = n.getFullYear(); cal.m = n.getMonth(); cal.sel = today(); renderCal(); }
+function renderCal() {
+  const g = $('cal-grid'); g.textContent = '';
+  $('cal-title').textContent = new Date(cal.y, cal.m, 1).toLocaleDateString(undefined, {month:'long', year:'numeric'});
+  ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(w => { const d = document.createElement('div'); d.className = 'wd'; d.textContent = w; g.appendChild(d); });
+  const first = new Date(cal.y, cal.m, 1).getDay(), days = new Date(cal.y, cal.m + 1, 0).getDate(), evs = evList(), t = today();
+  for (let i = 0; i < first; i++) g.appendChild(document.createElement('div'));
+  for (let d = 1; d <= days; d++) {
+    const ds = cal.y + '-' + calPad(cal.m + 1) + '-' + calPad(d), b = document.createElement('button'), n = document.createElement('b');
+    b.className = 'day' + (ds === t ? ' today' : '') + (ds === cal.sel ? ' sel' : ''); n.textContent = d; b.appendChild(n);
+    const list = evs.filter(e => e.d === ds).sort((a, c) => (a.t || '').localeCompare(c.t || ''));
+    list.slice(0, 2).forEach(e => b.appendChild(evChip(e)));
+    if (list.length > 2) { const s = document.createElement('small'); s.textContent = '+' + (list.length - 2) + ' more'; b.appendChild(s); }
+    b.onclick = () => { cal.sel = ds; resetEv(); renderCal(); };
+    g.appendChild(b);
+  }
+  renderDay();
+}
+function renderDay() {
+  const box = $('cal-events'); box.textContent = ''; $('cal-day').hidden = !cal.sel;
+  if (!cal.sel) return;
+  $('cal-day-title').textContent = new Date(cal.sel + 'T00:00:00').toLocaleDateString(undefined, {weekday:'long', month:'long', day:'numeric'});
+  const list = evList().filter(e => e.d === cal.sel).sort((a, c) => (a.t || '').localeCompare(c.t || ''));
+  if (!list.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Nothing planned yet ♡'; box.appendChild(p); }
+  list.forEach(e => {
+    const r = document.createElement('div'), ed = document.createElement('button'), de = document.createElement('button'); r.className = 'evrow';
+    ed.className = de.className = 'mini trash'; ed.textContent = '✎'; de.textContent = '🗑'; ed.title = 'Edit'; de.title = 'Delete';
+    ed.onclick = () => { cal.edit = e.id; cal.ev = {c:e.c, p:e.p, s:e.s || ''}; $('ev-title').value = e.n; $('ev-time').value = e.t || ''; $('ev-save').textContent = 'Save changes ♡'; $('ev-cancel').hidden = false; refreshEv(); $('ev-title').focus(); };
+    de.onclick = () => { if (confirm('Delete this event? This cannot be undone.')) { save('events', evList().filter(x => x.id !== e.id)); resetEv(); renderCal(); } };
+    r.append(evChip(e), ed, de); box.appendChild(r);
+  });
+}
+function saveEvent() {
+  const n = $('ev-title').value.trim(), m = $('msg-ev');
+  if (!n) { m.textContent = 'Write the event first ♡'; return; }
+  const all = evList(), e = cal.edit && all.find(x => x.id === cal.edit);
+  if (e) Object.assign(e, {n, t:$('ev-time').value, c:cal.ev.c, p:cal.ev.p, s:cal.ev.s});
+  else all.push({id:Date.now(), d:cal.sel, n, t:$('ev-time').value, c:cal.ev.c, p:cal.ev.p, s:cal.ev.s});
+  if (!save('events', all)) { m.textContent = "Couldn't save in this browser."; return; }
+  resetEv(); $('msg-ev').textContent = 'Saved ♡'; renderCal();
+}
+
 // ---- Username warning, cat friend and cat cursor ----
 function checkName(id, msgId) {
   const v = $(id).value.trim(), o = v && byName(v);
@@ -638,12 +748,14 @@ const CAT = 112;
 function catState(s) { if (cat.state !== s) { cat.state = s; $('cat').className = 's-' + s; } }
 function placeCat() {
   const r = document.querySelector('.site').getBoundingClientRect(), W = innerWidth, L = r.left, R = W - r.right, need = CAT + 20, el = $('cat');
+  if (!r.width) { el.style.display = 'none'; cat.seen = false; return; } // site hidden (login screen): wait for it
   if (!catOn() || Math.max(L, R) < need) { el.style.display = 'none'; return; }
   el.style.display = 'block';
   if (!cat.seen) { cat.seen = true; cat.side = L >= need ? 1 : 2; cat.x = cat.tx = cat.side === 1 ? Math.max(4, L / 2 - CAT / 2) : r.right + (R - CAT) / 2; cat.y = cat.ty = innerHeight - CAT - 24; }
 }
 function moveCat(e) { // follows only while the cursor is on the tiles; over the site the cat stays where it was left
   const r = document.querySelector('.site').getBoundingClientRect(), W = innerWidth, L = r.left, R = W - r.right, need = CAT + 20;
+  if (!r.width) return;
   if (!catOn() || Math.max(L, R) < need) { $('cat').style.display = 'none'; return; }
   $('cat').style.display = 'block';
   const left = e.clientX < r.left - 6 && L >= need, right = e.clientX > r.right + 6 && R >= need;
@@ -672,6 +784,8 @@ function initExtras() {
   const bk = $('bk');
   BOOKS.forEach((n, i) => { const o = document.createElement('option'); o.value = i; o.textContent = n; bk.appendChild(o); });
   $('rv').innerHTML = $('ver').innerHTML;
+  $('ib-ver').innerHTML = $('ver').innerHTML;
+  BOOKS.forEach((n, i) => { const o = document.createElement('option'); o.value = i; o.textContent = n; $('ib-bk').appendChild(o); });
   setCatClass();
   placeCat();
   addEventListener('resize', placeCat);
