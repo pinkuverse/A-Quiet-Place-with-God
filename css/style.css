@@ -221,3 +221,37 @@ html.dark .qopt{background:#241820}
 #cat{width:112px;height:112px}
 #cat.s-curious .head{transform:rotate(-8deg);transform-origin:50px 46px}
 #cat.s-sleep .head{transform:translateY(3px) rotate(4deg);transform-origin:50px 46px}
+
+/* Round 9: inductive study + notes calendar */
+.step{display:flex;align-items:center;gap:8px;margin:16px 0 4px}
+.num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--p1);color:#fff;font:700 13px 'Fredoka',sans-serif}
+.tip{display:block;opacity:.8;margin:0 0 4px;line-height:1.4}
+.quote-card{margin:8px 0 12px;padding:16px;border:2px dashed var(--p1);border-radius:16px;background:linear-gradient(135deg,var(--p2),#fff);text-align:center;font:600 18px/1.45 'Fredoka',sans-serif;color:var(--p4);white-space:pre-wrap}
+.quote-card small{display:block;margin-top:6px;font:600 12px 'Quicksand',sans-serif;opacity:.8}
+html.dark .quote-card{background:#382430}
+#list-inductive{max-height:460px;overflow-y:auto}
+.calhead{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.calhead h3{margin:0;min-width:150px;text-align:center}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.wd{text-align:center;font:600 11px 'Fredoka',sans-serif;opacity:.7}
+.day{min-height:62px;padding:3px;border:2px solid var(--p3);border-radius:10px;background:#fff;color:inherit;font:inherit;text-align:left;cursor:pointer;overflow:hidden}
+.day b{display:block;font:700 12px 'Fredoka',sans-serif}
+.day small{display:block;font-size:10px;opacity:.7}
+.day.today{border-color:var(--p1);box-shadow:0 0 0 2px var(--p2)}
+.day.sel{background:var(--p2)}
+.ev{display:flex;align-items:center;gap:2px;margin-top:2px;padding:1px 4px;border-radius:6px;font-size:10px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background-color:var(--c,#dfe6f2);background-image:var(--pat,none);background-size:var(--sz,auto);color:#4a3550}
+.ev .stk{width:11px;height:11px;margin:0;flex:none}
+#cal-day h4{margin:14px 0 6px;font:700 16px 'Fredoka',sans-serif;color:var(--p4)}
+.evrow{display:flex;align-items:center;gap:6px;margin:6px 0}
+.evrow .ev{flex:1;margin:0;padding:6px 10px;font-size:13px;border-radius:10px}
+.evrow .ev .stk{width:16px;height:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+.chips button{border:2px solid transparent;border-radius:12px;padding:3px 6px;background:#fff;cursor:pointer}
+.chips button.on{border-color:var(--p1);box-shadow:0 0 0 2px var(--p2)}
+.chips .cc{width:30px;height:30px;border-radius:50%;padding:0;border:2px solid #fff;box-shadow:0 0 0 1px #8d4561}
+.chips .cc.on{box-shadow:0 0 0 2px var(--p1)}
+.chips .pp{width:46px;height:28px;border-radius:8px;border:1px solid #0002;background-color:var(--c,#dfe6f2);background-image:var(--pat,none);background-size:var(--sz,auto)}
+.chips .ss{min-width:34px;height:32px;line-height:0}
+.chips .ss .stk{width:24px;height:24px;margin:0}
+html.dark .day{background:#2d1d26}
+@media(max-width:560px){.day{min-height:52px;padding:2px}.ev{font-size:9px}}
