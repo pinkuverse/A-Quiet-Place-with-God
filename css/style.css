@@ -1,5 +1,6 @@
 /* A Quiet Place with God - styles */
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Patrick+Hand&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Dancing+Script:wght@400;700&display=swap');
 :root{--pink:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 84.3%) 75.1%);--deep:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 53.0%) 54.9%);--light:hsl(calc(var(--hue,337) + 0) calc(var(--sat,1) * 100.0%) 93.9%);--pale:hsl(calc(var(--hue,337) + 1) calc(var(--sat,1) * 100.0%) 97.8%);--ink:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 31.0%) 39.8%)}
 *{box-sizing:border-box}
 body{margin:0;padding:25px 12px;color:var(--ink);font-family:'Quicksand',sans-serif;background-color:hsl(calc(var(--hue,337) - 1) calc(var(--sat,1) * 100.0%) 97.1%);
@@ -255,3 +256,26 @@ html.dark .quote-card{background:#382430}
 .chips .ss .stk{width:24px;height:24px;margin:0}
 html.dark .day{background:#2d1d26}
 @media(max-width:560px){.day{min-height:52px;padding:2px}.ev{font-size:9px}}
+
+/* Round 10: rich text, save-as page, smaller calendar days */
+.rte{min-height:110px;padding:12px;margin:8px 0 13px;border:2px solid var(--p3);border-radius:12px;background:#fff;color:var(--ink);font:500 14px/1.55 'Quicksand',sans-serif;overflow:auto;outline:none;word-break:break-word}
+.rte:focus{border-color:var(--p1)}
+.rte:empty::before{content:attr(data-ph);opacity:.55;pointer-events:none}
+.rtebar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 -4px}
+.rtebar select{width:auto;margin:0;padding:5px 8px;font-size:13px}
+.rtebar button{border:2px solid var(--p3);background:#fff;border-radius:10px;padding:2px 11px;font:700 14px 'Quicksand',sans-serif;cursor:pointer;color:inherit}
+.rtebar button.on{background:var(--p2);border-color:var(--p1)}
+#sheet-body{white-space:normal}
+#sheet-body h4{margin:14px 0 4px;font:700 16px 'Fredoka',sans-serif;color:var(--p4)}
+.meta2{font-size:13px;opacity:.8;margin-bottom:8px}
+#exp{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:12px;background:#3a203066}
+.exp-panel{width:min(560px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:18px;padding:16px 18px}
+.exp-panel h3{margin:0 0 8px}
+#exp-canvas{display:block;max-width:100%;max-height:330px;margin:0 auto;border:2px solid var(--p3);border-radius:10px}
+.chips .tt{padding:5px 10px;font:600 13px 'Quicksand',sans-serif;color:inherit;text-transform:capitalize}
+html.dark .rte,html.dark .rtebar button,html.dark .exp-panel{background:#241820;color:#f3d9e4}
+#cal > *{max-width:600px;margin-left:auto;margin-right:auto}
+.day{min-height:46px;padding:2px 3px;border-radius:9px}
+.day b{font-size:11px}
+.ev{font-size:9px;margin-top:1px;padding:0 3px}
+@media(max-width:560px){.day{min-height:42px}}
