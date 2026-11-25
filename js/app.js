@@ -184,7 +184,7 @@ function answerForm(r, k, id) {
   r.append('Answered on ', d, s);
 }
 
-function describe(k, it) {
+function describe0(k, it) {
   if (k === 'inductive') {
     const [ref, obs, q, quote, scr] = it.v;
     const full = [scr && '📖 Scripture\n' + scr, obs && '🔍 Observation\n' + obs, q && '❓ Questions\n' + q, quote && '💡 Timeless Discipline\n“' + quote + '”'].filter(Boolean).join('\n\n');
@@ -235,11 +235,11 @@ function card(k, it) {
 }
 let sheetTimer = null;
 const EDIT = {
-  bible: [['Passage', 'input', 0], ['Thoughts', 'area', 1]],
-  calendar: [['Date of my devotion', 'date', 0], ['Bible reading', 'input', 1], ['What God showed me', 'area', 2]],
-  prayers: [['Title of this prayer', 'input', 2], ['Prayer', 'area', 0], ['Date of this request', 'date', 1]],
-  notes: [['Title', 'input', 0], ['Note', 'area', 1]],
-  inductive: [['Scripture', 'input', 0], ['Scripture text', 'area', 4], ['Observation', 'area', 1], ['Questions', 'area', 2], ['Timeless Discipline (my own quote)', 'area', 3]]
+  bible: [['Passage', 'input', 0], ['Thoughts', 'rich', 1]],
+  calendar: [['Date of my devotion', 'date', 0], ['Bible reading', 'input', 1], ['What God showed me', 'rich', 2]],
+  prayers: [['Title of this prayer', 'input', 2], ['Prayer', 'rich', 0], ['Date of this request', 'date', 1]],
+  notes: [['Title', 'input', 0], ['Note', 'rich', 1]],
+  inductive: [['Scripture', 'input', 0], ['Scripture text', 'area', 4], ['Observation', 'rich', 1], ['Questions', 'rich', 2], ['Timeless Discipline (my own quote)', 'area', 3]]
 };
 function editEntry(k, it) { // fix a typo: the drawer turns into the same fields you typed in
   const r = $('sheet-actions'), body = $('sheet-body');
@@ -249,9 +249,9 @@ function editEntry(k, it) { // fix a typo: the drawer turns into the same fields
   if ($('sheet-stk')) $('sheet-stk').hidden = true;
   const fields = EDIT[k].map(([label, type, i]) => {
     const l = document.createElement('label'); l.className = 'lbl'; l.textContent = label;
-    const f = document.createElement(type === 'area' ? 'textarea' : 'input');
+    const f = document.createElement(type === 'area' ? 'textarea' : type === 'rich' ? 'div' : 'input'); if (type === 'rich') f.className = 'rte';
     if (type === 'date') f.type = 'date'; if (type === 'area') f.style.minHeight = '140px';
-    f.value = (it.v[i] || '').trim(); box.append(l, f); return [i, f];
+    box.append(l, f); if (type === 'rich') makeRte(f); f.value = (it.v[i] || '').trim(); return [i, f];
   });
   const msg = document.createElement('p'); msg.className = 'msg'; box.appendChild(msg);
   r.textContent = '';
@@ -268,13 +268,13 @@ function editEntry(k, it) { // fix a typo: the drawer turns into the same fields
   const first = box.querySelector('textarea, input'); if (first) first.focus();
 }
 function openSheet(k, it) {
-  const {title, text, meta, full} = describe(k, it), r = $('sheet-actions'), s = $('sheet');
+  const {title, text, meta, html} = describe(k, it), r = $('sheet-actions'), s = $('sheet');
   if ($('sheet-edit')) $('sheet-edit').hidden = true;
   $('sheet-body').hidden = false; if ($('sheet-stk')) $('sheet-stk').hidden = false;
   let qc = $('sheet-quote'); if (!qc) { qc = document.createElement('div'); qc.id = 'sheet-quote'; qc.className = 'quote-card'; $('sheet-body').parentNode.insertBefore(qc, $('sheet-body')); }
   qc.hidden = !(k === 'inductive' && it.v[3]); if (!qc.hidden) fillQuote(qc, it.v[3], it.v[0]);
   $('sheet-title').textContent = title; if (it.st) $('sheet-title').prepend(stkEl(it.st));
-  $('sheet-body').textContent = (meta ? meta + '\n\n' : '') + (full || text || '(nothing written)');
+  $('sheet-body').innerHTML = (meta ? '<div class="meta2">' + esc(meta) + '</div>' : '') + (html || '(nothing written)');
   let st = $('sheet-stk');
   if (!st) { st = document.createElement('div'); st.id = 'sheet-stk'; r.parentNode.insertBefore(st, r); }
   st.textContent = '';
@@ -294,7 +294,8 @@ function openSheet(k, it) {
   const x = document.createElement('button'); x.className = 'mini'; x.textContent = 'Delete'; x.onclick = () => remove(k, it.id);
   const ed = document.createElement('button'); ed.className = 'mini'; ed.textContent = '✎ Edit'; ed.onclick = () => editEntry(k, it);
   const c = document.createElement('button'); c.className = 'mini'; c.textContent = 'Close'; c.onclick = closeSheet;
-  r.append(ed, x, c);
+  const sv = document.createElement('button'); sv.className = 'mini'; sv.textContent = '⬇ Save'; sv.onclick = () => openExport(k, it);
+  r.append(ed, sv, x, c);
   clearTimeout(sheetTimer);
   s.classList.add('show');
   setTimeout(() => s.classList.add('open'), 20);
@@ -735,6 +736,173 @@ function saveEvent() {
   resetEv(); $('msg-ev').textContent = 'Saved ♡'; renderCal();
 }
 
+// ---- Rich text (fonts, bold, italic, underline) ----
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;'})[c]);
+const FONTS = [['Quicksand', 'Quicksand', "'Quicksand',sans-serif"], ['Fredoka (round)', 'Fredoka', "'Fredoka',sans-serif"], ['Caveat (handwriting)', 'Caveat', "'Caveat','Segoe Script',cursive"],
+  ['Patrick Hand (neat)', 'Patrick Hand', "'Patrick Hand','Comic Sans MS',cursive"], ['Dancing Script (cursive)', 'Dancing Script', "'Dancing Script','Brush Script MT',cursive"],
+  ['Merriweather (serif)', 'Merriweather', "'Merriweather',Georgia,serif"], ['Courier (typewriter)', 'Courier New', "'Courier New',monospace"]];
+const fontOf = s => { const m = /font-family:\s*([^;]+)/i.exec(String(s).replace(/["']/g, '')); return m ? FONTS.find(f => m[1].toLowerCase().includes(f[1].toLowerCase())) : null; };
+function cleanNode(n) {
+  if (n.nodeType === 3) return esc(n.textContent);
+  if (n.nodeType !== 1) return '';
+  const t = n.tagName.toLowerCase();
+  if (/^(script|style|iframe|object|embed|link|meta|svg)$/.test(t)) return '';
+  const kids = [...n.childNodes].map(cleanNode).join('');
+  if (t === 'br') return '<br>';
+  if (t === 'b' || t === 'strong') return '<b>' + kids + '</b>';
+  if (t === 'i' || t === 'em') return '<i>' + kids + '</i>';
+  if (t === 'u') return '<u>' + kids + '</u>';
+  if (t === 'div' || t === 'p' || t === 'h4') return '<' + t + '>' + kids + '</' + t + '>';
+  if (t === 'span' || t === 'font') { const f = fontOf(t === 'font' ? 'font-family:' + (n.getAttribute('face') || '') : n.getAttribute('style') || ''); return f ? '<span style="font-family:' + f[2] + '">' + kids + '</span>' : kids; }
+  return kids;
+}
+const cleanHtml = html => cleanNode(new DOMParser().parseFromString('<body>' + html, 'text/html').body);
+const toHtml = s => { s = s || ''; return /<(b|i|u|br|div|p|span|strong|em|h4|font)\b/i.test(s) ? cleanHtml(s) : esc(s).replace(/\n/g, '<br>'); };
+function htmlText(html) { const d = document.createElement('div'); d.innerHTML = toHtml(html).replace(/<br\s*\/?>/gi, '\n').replace(/<\/(div|p|h4)>/gi, '\n'); return d.textContent.replace(/\n{3,}/g, '\n\n').trim(); }
+const plain = s => htmlText(s).replace(/\s+/g, ' ');
+function describe(k, it) {
+  if (k === 'inductive') {
+    const [ref, obs, q, quote, scr] = it.v, sec = (t, b) => b ? '<h4>' + t + '</h4>' + b : '';
+    return {title: ref || 'Inductive study', text: quote ? '“' + quote + '”' : plain(obs) || plain(q) || plain(scr || ''),
+      html: sec('📖 Scripture', scr ? esc(scr).replace(/\n/g, '<br>') : '') + sec('🔍 Observation', obs ? toHtml(obs) : '') + sec('❓ Questions', q ? toHtml(q) : '') + sec('💡 Timeless Discipline', quote ? '“' + esc(quote) + '”' : '')};
+  }
+  const d = describe0(k, it); d.html = toHtml(d.text || ''); d.text = plain(d.text || ''); return d;
+}
+function makeRte(ed) {
+  if (ed.dataset.rte) return; ed.dataset.rte = 1; ed.contentEditable = 'true'; ed.spellcheck = true;
+  Object.defineProperty(ed, 'value', {configurable: true, get: () => ed.textContent.trim() ? cleanHtml(ed.innerHTML) : '', set: v => { ed.innerHTML = toHtml(v); }});
+  const bar = document.createElement('div'); bar.className = 'rtebar';
+  const sel = document.createElement('select'); sel.title = 'Font'; sel.innerHTML = '<option value="">Font ▾</option>' + FONTS.map(f => '<option value="' + f[1] + '">' + f[0] + '</option>').join('');
+  bar.appendChild(sel);
+  let saved = null;
+  document.addEventListener('selectionchange', () => {
+    const s = getSelection(); if (!s.rangeCount || !ed.contains(s.anchorNode)) return;
+    saved = s.getRangeAt(0).cloneRange();
+    bar.querySelectorAll('button').forEach(b => { try { b.classList.toggle('on', document.queryCommandState(b.dataset.c)); } catch (e) {} });
+  });
+  const run = (cmd, val) => { if (document.activeElement !== ed) { ed.focus(); if (saved) { const s = getSelection(); s.removeAllRanges(); s.addRange(saved); } } document.execCommand('styleWithCSS', false, cmd === 'fontName'); document.execCommand(cmd, false, val); };
+  [['bold', 'B'], ['italic', 'I'], ['underline', 'U']].forEach(([c, t]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.c = c; b.textContent = t; b.title = c; b.style.fontStyle = c === 'italic' ? 'italic' : ''; b.style.textDecoration = c === 'underline' ? 'underline' : ''; b.onmousedown = e => e.preventDefault(); b.onclick = () => run(c); bar.appendChild(b); });
+  sel.onchange = () => { if (sel.value) run('fontName', sel.value); sel.value = ''; };
+  ed.addEventListener('paste', e => { e.preventDefault(); document.execCommand('insertText', false, (e.clipboardData || window.clipboardData).getData('text/plain')); });
+  ed.parentNode.insertBefore(bar, ed);
+}
+
+// ---- Save an entry as a photo, PDF or text file (on pretty paper) ----
+const PAPER = {white:'#ffffff', cream:'#fff8e7', pink:'#ffe3ee', blue:'#e3f0ff', mint:'#e2f6ea', lavender:'#efe6ff', peach:'#ffe9d9', butter:'#fff6c9', grey:'#eef0f4'};
+const PAPERPAT = ['plain', 'lined', 'grid', 'dots', 'hearts', 'stars', 'checks'];
+const exp = {k:null, it:null, c:'cream', p:'lined', f:'png'};
+function paperPattern(x, W, H, p, LH) {
+  x.save(); x.lineWidth = 2; x.strokeStyle = 'rgba(120,130,180,.28)'; x.fillStyle = 'rgba(140,110,170,.22)';
+  const line = (a, b, c, d) => { x.beginPath(); x.moveTo(a, b); x.lineTo(c, d); x.stroke(); };
+  if (p === 'lined') { for (let y = LH; y < H; y += LH) line(0, y, W, y); x.strokeStyle = 'rgba(240,120,150,.45)'; line(46, 0, 46, H); }
+  else if (p === 'grid') { for (let y = 0; y < H; y += 36) line(0, y, W, y); for (let q = 0; q < W; q += 36) line(q, 0, q, H); }
+  else if (p === 'dots') { for (let y = 20; y < H; y += 36) for (let q = 20; q < W; q += 36) { x.beginPath(); x.arc(q, y, 2.6, 0, 7); x.fill(); } }
+  else if (p === 'checks') { x.fillStyle = 'rgba(255,255,255,.6)'; for (let y = 0; y < H; y += 44) for (let q = 0; q < W; q += 44) if (((y + q) / 44) % 2 === 0) x.fillRect(q, y, 44, 44); }
+  else if (p === 'hearts' || p === 'stars') {
+    const P = new Path2D(p === 'hearts' ? 'M0 6C-10-1-8-9-3-8-1.5-7.5 0-6 0-5 0-6 1.5-7.5 3-8 8-9 10-1 0 6z' : 'M0-8l2.4 5 5.5.7-4 3.8 1 5.4L0 4l-4.9 2.7 1-5.4-4-3.8 5.5-.7z');
+    x.fillStyle = p === 'hearts' ? 'rgba(240,120,160,.22)' : 'rgba(240,190,60,.32)';
+    for (let y = 34, r = 0; y < H; y += 62, r++) for (let q = r % 2 ? 70 : 34; q < W; q += 72) { x.save(); x.translate(q, y); x.scale(1.4, 1.4); x.fill(P); x.restore(); }
+  }
+  x.restore();
+}
+function htmlRuns(html, base) {
+  const root = document.createElement('div'); root.innerHTML = html; const paras = [[]], last = () => paras[paras.length - 1];
+  const walk = (n, st) => {
+    if (n.nodeType === 3) { n.textContent.split(/(\s+)/).forEach(w => { if (w) last().push(Object.assign({}, st, {t: /^\s+$/.test(w) ? ' ' : w})); }); return; }
+    if (n.nodeType !== 1) return;
+    const t = n.tagName.toLowerCase(), s = Object.assign({}, st);
+    if (t === 'b') s.b = 1; if (t === 'i') s.i = 1; if (t === 'u') s.u = 1; if (t === 'h4') { s.b = 1; s.sz = 30; }
+    if (t === 'span') { const f = fontOf(n.getAttribute('style') || ''); if (f) s.f = f; }
+    if (t === 'br') { paras.push([]); return; }
+    const blk = t === 'div' || t === 'p' || t === 'h4';
+    if (blk && last().length) paras.push([]);
+    n.childNodes.forEach(c => walk(c, s));
+    if (blk && last().length) paras.push([]);
+  };
+  root.childNodes.forEach(c => walk(c, base)); return paras;
+}
+async function renderPaper(cv, k, it, st, scale) {
+  const W = 900, PAD = 76, MAXW = W - PAD - 56, LH = 46, d = describe(k, it), x = cv.getContext('2d');
+  const fnt = r => (r.i ? 'italic ' : '') + (r.b ? 'bold ' : '') + (r.sz || 28) + 'px ' + (r.f ? r.f[2] : "'Quicksand',sans-serif");
+  try { await Promise.all(FONTS.map(f => document.fonts.load('28px ' + f[2].split(',')[0]))); } catch (e) {}
+  const paras = [{runs:[{t:d.title, b:1, f:FONTS[1], sz:40}], lh:58}];
+  if (d.meta) paras.push({runs:[{t:d.meta, i:1, sz:24}], lh:36});
+  htmlRuns(d.html, {sz:28}).forEach(r => paras.push({runs:r, lh:LH}));
+  const lines = []; x.font = '28px sans-serif';
+  paras.forEach(pr => {
+    let line = [], wd = 0;
+    const flush = () => { while (line.length && line[line.length - 1].t === ' ') line.pop(); lines.push({tok:line, lh:pr.lh}); line = []; wd = 0; };
+    pr.runs.forEach(r => {
+      x.font = fnt(r); const w = x.measureText(r.t).width;
+      if (r.t === ' ') { if (line.length) { line.push(Object.assign({}, r, {w, x:wd})); wd += w; } return; }
+      if (wd + w > MAXW && line.length) flush();
+      line.push(Object.assign({}, r, {w, x:wd})); wd += w;
+    });
+    flush();
+  });
+  let y = PAD - 8; lines.forEach(l => { y += l.lh; l.y = y - 12; });
+  const H = Math.max(900, Math.round(y + 120)), sc = Math.min(scale, 16000 / H);
+  cv.width = Math.round(W * sc); cv.height = Math.round(H * sc); x.setTransform(sc, 0, 0, sc, 0, 0);
+  x.fillStyle = PAPER[st.c] || '#fff8e7'; x.fillRect(0, 0, W, H); paperPattern(x, W, H, st.p, LH);
+  lines.forEach(l => l.tok.forEach(t => { x.font = fnt(t); x.fillStyle = '#4a3550'; x.fillText(t.t, PAD + t.x, l.y); if (t.u && t.t !== ' ') x.fillRect(PAD + t.x, l.y + 5, t.w, 2); }));
+  if (it.st && STK[it.st]) {
+    try {
+      const defs = (document.querySelector('body > svg defs') || {}).innerHTML || '', inner = STK[it.st].replace(/^<svg[^>]*>|<\/svg>$/g, '');
+      const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="200" height="200"><defs>' + defs + '</defs>' + inner + '</svg>');
+      await img.decode(); x.drawImage(img, W - 150, 22, 100, 100);
+    } catch (e) {}
+  }
+  x.font = '600 22px Fredoka, sans-serif'; x.fillStyle = 'rgba(100,70,110,.6)'; x.textAlign = 'left'; x.fillText('A Quiet Place with God ♡', PAD, H - 44);
+  x.textAlign = 'right'; x.fillText(new Date().toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'}), W - 56, H - 44); x.textAlign = 'left';
+}
+function jpegToPdf(dataUrl, w, h) {
+  const bin = atob(dataUrl.split(',')[1]), img = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) img[i] = bin.charCodeAt(i);
+  const pw = 595, ph = Math.round(595 * h / w), enc = s => new TextEncoder().encode(s), parts = [], offs = []; let pos = 0;
+  const push = b => { parts.push(b); pos += b.length; };
+  const obj = (n, head, stream) => { offs[n] = pos; push(enc(n + ' 0 obj\n' + head + (stream ? '\nstream\n' : '\n'))); if (stream) { push(stream); push(enc('\nendstream')); } push(enc('\nendobj\n')); };
+  push(enc('%PDF-1.4\n'));
+  obj(1, '<< /Type /Catalog /Pages 2 0 R >>'); obj(2, '<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+  obj(3, '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pw + ' ' + ph + '] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>');
+  obj(4, '<< /Type /XObject /Subtype /Image /Width ' + w + ' /Height ' + h + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + img.length + ' >>', img);
+  const cs = enc('q ' + pw + ' 0 0 ' + ph + ' 0 0 cm /Im0 Do Q'); obj(5, '<< /Length ' + cs.length + ' >>', cs);
+  const xr = pos; let t = 'xref\n0 6\n0000000000 65535 f \n'; for (let n = 1; n <= 5; n++) t += String(offs[n]).padStart(10, '0') + ' 00000 n \n';
+  push(enc(t + 'trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n' + xr + '\n%%EOF'));
+  return new Blob(parts, {type:'application/pdf'});
+}
+function saveBlob(blob, name) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
+let expTimer = 0;
+function expPreview() { clearTimeout(expTimer); expTimer = setTimeout(() => renderPaper($('exp-canvas'), exp.k, exp.it, exp, .5), 120); }
+function expMark() {
+  document.querySelectorAll('#exp-colors button').forEach(b => b.classList.toggle('on', b.dataset.k === exp.c));
+  document.querySelectorAll('#exp-pats button').forEach(b => b.classList.toggle('on', b.dataset.k === exp.p));
+  document.querySelectorAll('#exp-fmt button').forEach(b => b.classList.toggle('on', b.dataset.k === exp.f));
+}
+function openExport(k, it) {
+  exp.k = k; exp.it = it;
+  if (!$('exp')) {
+    const d = document.createElement('div'); d.id = 'exp'; d.hidden = true; d.onclick = e => { if (e.target === d) d.hidden = true; };
+    d.innerHTML = '<div class="exp-panel"><h3>Save as a pretty page ♡</h3><canvas id="exp-canvas"></canvas><p class="lbl">Paper color</p><div id="exp-colors" class="chips"></div><p class="lbl">Paper pattern</p><div id="exp-pats" class="chips"></div><p class="lbl">Save as</p><div id="exp-fmt" class="chips"></div><button class="action" id="exp-go">Download ♡</button> <button class="mini" id="exp-close">Close</button><p class="msg" id="msg-exp"></p></div>';
+    document.body.appendChild(d);
+    const mk = (box, items, cls, fn, key) => items.forEach(v => { const b = document.createElement('button'); b.dataset.k = v[0]; b.className = cls; fn(b, v); b.onclick = () => { exp[key] = v[0]; expMark(); expPreview(); }; $(box).appendChild(b); });
+    mk('exp-colors', Object.keys(PAPER).map(c => [c]), 'cc', (b, v) => { b.style.background = PAPER[v[0]]; b.title = v[0]; }, 'c');
+    mk('exp-pats', PAPERPAT.map(p => [p]), 'tt', (b, v) => { b.textContent = v[0]; }, 'p');
+    mk('exp-fmt', [['png', '📷 Photo (PNG)'], ['pdf', '📄 PDF file'], ['txt', '📝 Text file']], 'tt', (b, v) => { b.textContent = v[1]; }, 'f');
+    $('exp-close').onclick = () => { d.hidden = true; };
+    $('exp-go').onclick = async () => {
+      const m = $('msg-exp'), dd = describe(exp.k, exp.it), name = 'quiet-place-' + (dd.title || 'entry').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+      m.textContent = 'Making your page…';
+      try {
+        if (exp.f === 'txt') saveBlob(new Blob([dd.title + '\n' + (dd.meta ? dd.meta + '\n' : '') + '\n' + htmlText(dd.html) + '\n\n— A Quiet Place with God'], {type:'text/plain;charset=utf-8'}), name + '.txt');
+        else { const cv = document.createElement('canvas'); await renderPaper(cv, exp.k, exp.it, exp, 2);
+          if (exp.f === 'png') await new Promise(r => cv.toBlob(b => { saveBlob(b, name + '.png'); r(); }, 'image/png'));
+          else saveBlob(jpegToPdf(cv.toDataURL('image/jpeg', .92), cv.width, cv.height), name + '.pdf'); }
+        m.textContent = 'Saved ♡ Check your downloads.';
+      } catch (e) { m.textContent = "Couldn't make the file here. Try another format."; }
+    };
+  }
+  expMark(); $('exp').hidden = false; expPreview();
+}
+
 // ---- Username warning, cat friend and cat cursor ----
 function checkName(id, msgId) {
   const v = $(id).value.trim(), o = v && byName(v);
@@ -786,6 +954,7 @@ function initExtras() {
   $('rv').innerHTML = $('ver').innerHTML;
   $('ib-ver').innerHTML = $('ver').innerHTML;
   BOOKS.forEach((n, i) => { const o = document.createElement('option'); o.value = i; o.textContent = n; $('ib-bk').appendChild(o); });
+  document.querySelectorAll('.rte').forEach(makeRte);
   setCatClass();
   placeCat();
   addEventListener('resize', placeCat);
