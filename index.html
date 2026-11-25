@@ -9,7 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌷</text></svg>">
 <script>function applyTheme(t){try{t=t||{};var c=t.c||'#f58ab3',r=parseInt(c.substr(1,2),16)/255,g=parseInt(c.substr(3,2),16)/255,b=parseInt(c.substr(5,2),16)/255,x=Math.max(r,g,b),n=Math.min(r,g,b),d=x-n,h=0;if(d){h=x==r?((g-b)/d)%6:x==g?(b-r)/d+2:(r-g)/d+4;h*=60;if(h<0)h+=360}var l=(x+n)/2,s=d?d/(1-Math.abs(2*l-1)):0,e=document.documentElement,bp=c.toLowerCase()=='#f58ab3';e.style.setProperty('--hue',bp?337:Math.round(h));e.style.setProperty('--sat',bp?1:Math.min(1.25,Math.max(.15,s/.87)).toFixed(2));e.style.filter='';e.classList.toggle('dark',!!t.dark)}catch(z){}}
 try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('locked');applyTheme(JSON.parse(localStorage.getItem('qp_theme')||'null'))}catch(e){document.documentElement.classList.add('locked')}</script>
-<link rel="stylesheet" href="css/style.css?v=12">
+<link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="g-b" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#f6faff"/><stop offset=".5" stop-color="#bdd8f8"/><stop offset="1" stop-color="#85aeea"/></radialGradient><radialGradient id="g-p" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#fff6fa"/><stop offset=".5" stop-color="#ffc9de"/><stop offset="1" stop-color="#f48fb8"/></radialGradient><radialGradient id="g-w" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#f6eff8"/><stop offset="1" stop-color="#d7c9e4"/></radialGradient><radialGradient id="g-y" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#fffbe3"/><stop offset=".5" stop-color="#ffe27d"/><stop offset="1" stop-color="#f3b73c"/></radialGradient><radialGradient id="g-r" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#ffe3e7"/><stop offset=".5" stop-color="#ff8c9c"/><stop offset="1" stop-color="#e4496b"/></radialGradient><radialGradient id="g-g" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#f0fbe2"/><stop offset=".5" stop-color="#b9e28c"/><stop offset="1" stop-color="#6db95a"/></radialGradient><radialGradient id="g-o" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#fff2d6"/><stop offset=".5" stop-color="#ffb35a"/><stop offset="1" stop-color="#ef6430"/></radialGradient><radialGradient id="g-t" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#fff3e2"/><stop offset=".5" stop-color="#f2d0a2"/><stop offset="1" stop-color="#d8a56f"/></radialGradient></defs></svg>
@@ -192,10 +192,10 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
       <textarea id="inductive5" placeholder="The passage appears here. You can also type or paste the verses yourself (handy for the NIV and others)."></textarea>
       <div class="step"><span class="num">2</span><b>Observation</b></div>
       <small class="tip">Ask: Who? What? Where? When? Which words repeat? What stands out? Write only what the text says. No guessing yet.</small>
-      <textarea id="inductive2" placeholder="What do I notice in this passage?"></textarea>
+      <div class="rte" id="inductive2" data-ph="What do I notice in this passage?"></div>
       <div class="step"><span class="num">3</span><b>Questions</b></div>
       <small class="tip">What does it mean? Why did the writer say it? What is hard to understand? What does it show about God and about people?</small>
-      <textarea id="inductive3" placeholder="What questions do I have? What do I think it means?"></textarea>
+      <div class="rte" id="inductive3" data-ph="What questions do I have? What do I think it means?"></div>
       <div class="step"><span class="num">4</span><b>Timeless Discipline</b></div>
       <small class="tip">Put the lasting truth in your own words: a short quote or saying that could help anyone, in any time. Then live it out today.</small>
       <textarea id="inductive4" placeholder="My own quote or saying (example: God's peace is deeper than my problem.)"></textarea>
@@ -208,7 +208,7 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
         <div class="panel">
       <h3>Today's Reading</h3>
       <input id="bible1" placeholder="Example: Psalm 23">
-      <textarea id="bible2" placeholder="Write your thoughts about today's passage..."></textarea>
+      <div class="rte" id="bible2" data-ph="Write your thoughts about today's passage..."></div>
       <button class="action" onclick="add('bible')">Save Study ♡</button>
       <button class="action" id="read-btn" onclick="readPassage()">Read passage ♡</button>
       <p class="msg" id="msg-bible"></p>
@@ -223,7 +223,7 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
       <label class="lbl">Date of my devotion</label>
       <input id="calendar1" type="date">
       <input id="calendar2" placeholder="Bible reading (example: John 3)">
-      <textarea id="calendar3" placeholder="What did God show you today?"></textarea>
+      <div class="rte" id="calendar3" data-ph="What did God show you today?"></div>
       <button class="action" onclick="add('calendar')">Save Devotion ♡</button>
       <p class="msg" id="msg-calendar"></p>
     </div>
@@ -238,7 +238,7 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
       <label class="lbl">Date of this request</label>
       <input id="prayers2" type="date">
       <input id="prayers3" placeholder="Title of this prayer (example: For Lola's health)" maxlength="60">
-      <textarea id="prayers1" placeholder="Dear God..."></textarea>
+      <div class="rte" id="prayers1" data-ph="Dear God..."></div>
       <button class="action" onclick="add('prayers')">Save Prayer ♡</button>
       <p class="msg" id="msg-prayers"></p>
     </div>
@@ -288,7 +288,7 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
     <div class="panel">
       <h3>A little space for your thoughts</h3>
       <input id="notes1" placeholder="Note title">
-      <textarea id="notes2" placeholder="Write anything on your heart..."></textarea>
+      <div class="rte" id="notes2" data-ph="Write anything on your heart..."></div>
       <button class="action" onclick="add('notes')">Save Note ♡</button>
       <p class="msg" id="msg-notes"></p>
     </div>
@@ -353,7 +353,7 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
 <footer>Made with ♡, faith, and a little bit of pink 🌸</footer>
 </div>
 
-<div id="sheet"><div class="sheet-back" onclick="closeSheet()"></div><div class="sheet-panel"><h3 id="sheet-title"></h3><p id="sheet-body" class="full"></p><div class="row" id="sheet-actions"></div></div></div>
-<script src="js/app.js?v=12"></script>
+<div id="sheet"><div class="sheet-back" onclick="closeSheet()"></div><div class="sheet-panel"><h3 id="sheet-title"></h3><div id="sheet-body" class="full"></div><div class="row" id="sheet-actions"></div></div></div>
+<script src="js/app.js?v=13"></script>
 </body>
 </html>
