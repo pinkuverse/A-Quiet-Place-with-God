@@ -279,3 +279,19 @@ html.dark .rte,html.dark .rtebar button,html.dark .exp-panel{background:#241820;
 .day b{font-size:11px}
 .ev{font-size:9px;margin-top:1px;padding:0 3px}
 @media(max-width:560px){.day{min-height:42px}}
+
+/* Round 11: calendar days open like a drawer; tiny icons + colors outside */
+#cal > *{max-width:560px;margin-left:auto;margin-right:auto}
+.day{min-height:42px;padding:3px 4px}
+.dots{display:flex;flex-wrap:wrap;gap:3px;margin-top:2px;align-items:center}
+.dots small{font-size:9px;opacity:.7}
+.dot{display:inline-grid;place-items:center;min-width:16px;height:16px;border-radius:50%;background-color:var(--c,#dfe6f2);background-image:var(--pat,none);background-size:var(--sz,auto);box-shadow:0 0 0 1px #0002}
+.dot .stk{width:13px;height:13px;margin:0}
+#cal-back{position:fixed;inset:0;z-index:61;background:#5a2a3f66;opacity:0;pointer-events:none;transition:opacity .25s}
+#cal-back.open{opacity:1;pointer-events:auto}
+#cal-day{position:fixed;left:50%;bottom:0;z-index:62;width:min(720px,100%);max-height:88vh;overflow-y:auto;background:#fff;border:3px dashed var(--p1);border-bottom:0;border-radius:22px 22px 0 0;padding:16px 20px 26px;transform:translate(-50%,100%);visibility:hidden;transition:transform .3s ease,visibility 0s .3s}
+#cal-day.open{transform:translate(-50%,0);visibility:visible;transition:transform .3s ease}
+.timerow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.evrow .ev{font-size:14px}
+html.dark #cal-day{background:#2d1d26}
+@media(max-width:560px){.day{min-height:38px}}
