@@ -9,7 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌷</text></svg>">
 <script>function applyTheme(t){try{t=t||{};var c=t.c||'#f58ab3',r=parseInt(c.substr(1,2),16)/255,g=parseInt(c.substr(3,2),16)/255,b=parseInt(c.substr(5,2),16)/255,x=Math.max(r,g,b),n=Math.min(r,g,b),d=x-n,h=0;if(d){h=x==r?((g-b)/d)%6:x==g?(b-r)/d+2:(r-g)/d+4;h*=60;if(h<0)h+=360}var l=(x+n)/2,s=d?d/(1-Math.abs(2*l-1)):0,e=document.documentElement,bp=c.toLowerCase()=='#f58ab3';e.style.setProperty('--hue',bp?337:Math.round(h));e.style.setProperty('--sat',bp?1:Math.min(1.25,Math.max(.15,s/.87)).toFixed(2));e.style.filter='';e.classList.toggle('dark',!!t.dark)}catch(z){}}
 try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('locked');applyTheme(JSON.parse(localStorage.getItem('qp_theme')||'null'))}catch(e){document.documentElement.classList.add('locked')}</script>
-<link rel="stylesheet" href="css/style.css?v=13">
+<link rel="stylesheet" href="css/style.css?v=14">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="g-b" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#f6faff"/><stop offset=".5" stop-color="#bdd8f8"/><stop offset="1" stop-color="#85aeea"/></radialGradient><radialGradient id="g-p" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#fff6fa"/><stop offset=".5" stop-color="#ffc9de"/><stop offset="1" stop-color="#f48fb8"/></radialGradient><radialGradient id="g-w" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#f6eff8"/><stop offset="1" stop-color="#d7c9e4"/></radialGradient><radialGradient id="g-y" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#fffbe3"/><stop offset=".5" stop-color="#ffe27d"/><stop offset="1" stop-color="#f3b73c"/></radialGradient><radialGradient id="g-r" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#ffe3e7"/><stop offset=".5" stop-color="#ff8c9c"/><stop offset="1" stop-color="#e4496b"/></radialGradient><radialGradient id="g-g" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#f0fbe2"/><stop offset=".5" stop-color="#b9e28c"/><stop offset="1" stop-color="#6db95a"/></radialGradient><radialGradient id="g-o" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#fff2d6"/><stop offset=".5" stop-color="#ffb35a"/><stop offset="1" stop-color="#ef6430"/></radialGradient><radialGradient id="g-t" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="#fff3e2"/><stop offset=".5" stop-color="#f2d0a2"/><stop offset="1" stop-color="#d8a56f"/></radialGradient></defs></svg>
@@ -267,24 +267,6 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
 
   <section class="page" id="notes">
     <h2>📝 My Personal Notes</h2>
-    <div class="panel" id="cal">
-      <div class="calhead"><button class="mini" onclick="calMove(-1)" aria-label="Previous month">◀</button><h3 id="cal-title"></h3><button class="mini" onclick="calMove(1)" aria-label="Next month">▶</button><button class="mini" onclick="calToday()">Today</button></div>
-      <div class="calgrid" id="cal-grid"></div>
-      <div id="cal-day" hidden>
-        <h4 id="cal-day-title"></h4>
-        <div id="cal-events"></div>
-        <div class="evform">
-          <input id="ev-title" placeholder="Event or schedule (example: Youth fellowship)" maxlength="60">
-          <input id="ev-time" type="time">
-          <p class="lbl">Color</p><div id="ev-colors" class="chips"></div>
-          <p class="lbl">Pattern</p><div id="ev-pats" class="chips"></div>
-          <p class="lbl">Sticker</p><div id="ev-stks" class="chips"></div>
-          <button class="action" id="ev-save" onclick="saveEvent()">Add to calendar ♡</button>
-          <button class="mini" id="ev-cancel" onclick="resetEv()" hidden>Cancel editing</button>
-          <p class="msg" id="msg-ev"></p>
-        </div>
-      </div>
-    </div>
     <div class="panel">
       <h3>A little space for your thoughts</h3>
       <input id="notes1" placeholder="Note title">
@@ -293,6 +275,29 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
       <p class="msg" id="msg-notes"></p>
     </div>
     <div id="list-notes"></div>
+    <div class="panel" id="cal">
+      <h3>📅 My Calendar</h3>
+      <div class="calhead"><button class="mini" onclick="calMove(-1)" aria-label="Previous month">◀</button><h3 id="cal-title"></h3><button class="mini" onclick="calMove(1)" aria-label="Next month">▶</button><button class="mini" onclick="calToday()">Today</button></div>
+      <div class="calgrid" id="cal-grid"></div>
+      <p class="note">Tap a day to open its schedule ♡</p>
+    </div>
+    <div id="cal-back"></div>
+    <div id="cal-day">
+      <button class="mini" onclick="closeDay()">✕ Close</button>
+      <h4 id="cal-day-title"></h4>
+      <div id="cal-events"></div>
+      <div class="evform">
+        <p class="lbl">Add to this day</p>
+        <input id="ev-title" placeholder="Event or schedule (example: Youth fellowship)" maxlength="60">
+        <div class="timerow"><div><label class="lbl">From (time)</label><input id="ev-time" type="time"></div><div><label class="lbl">Until (optional)</label><input id="ev-time2" type="time"></div></div>
+        <p class="lbl">Color</p><div id="ev-colors" class="chips"></div>
+        <p class="lbl">Pattern</p><div id="ev-pats" class="chips"></div>
+        <p class="lbl">Sticker</p><div id="ev-stks" class="chips"></div>
+        <button class="action" id="ev-save" onclick="saveEvent()">Add to calendar ♡</button>
+        <button class="mini" id="ev-cancel" onclick="resetEv()" hidden>Cancel editing</button>
+        <p class="msg" id="msg-ev"></p>
+      </div>
+    </div>
   </section>
   <section class="page" id="settings">
     <h2>⚙️ Settings</h2>
@@ -354,6 +359,6 @@ try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('
 </div>
 
 <div id="sheet"><div class="sheet-back" onclick="closeSheet()"></div><div class="sheet-panel"><h3 id="sheet-title"></h3><div id="sheet-body" class="full"></div><div class="row" id="sheet-actions"></div></div></div>
-<script src="js/app.js?v=13"></script>
+<script src="js/app.js?v=14"></script>
 </body>
 </html>
