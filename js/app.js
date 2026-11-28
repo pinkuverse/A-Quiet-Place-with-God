@@ -667,13 +667,22 @@ const calPad = n => String(n).padStart(2, '0');
 const evList = () => load('events');
 const cal = {y:0, m:0, sel:'', edit:null, ev:{c:'mist', p:'none', s:''}};
 function styleEv(el, c, p) { const q = PATS[p] || PATS.none; el.style.setProperty('--c', COLORS[c] || COLORS.mist); el.style.setProperty('--pat', q.img); el.style.setProperty('--sz', q.sz); }
-function evChip(e) {
+const fmtT = t => t ? new Date('1970-01-01T' + t).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) : '';
+const evTime = e => e.t ? fmtT(e.t) + (e.t2 ? ' – ' + fmtT(e.t2) : '') : '';
+function evChip(e) { // full chip, used inside the day drawer
   const s = document.createElement('span'); s.className = 'ev'; styleEv(s, e.c, e.p);
   if (e.s) s.appendChild(stkEl(e.s));
-  s.append((e.t ? e.t + ' ' : '') + e.n); return s;
+  s.append((e.t ? evTime(e) + '  ' : '') + e.n); return s;
+}
+function evDot(e) { // tiny chip for the calendar grid: just the color + the sticker
+  const s = document.createElement('span'); s.className = 'dot'; styleEv(s, e.c, e.p);
+  if (e.s) s.appendChild(stkEl(e.s));
+  s.title = (e.t ? evTime(e) + ' ' : '') + e.n; return s;
 }
 function calInit() {
-  const n = new Date(); cal.y = n.getFullYear(); cal.m = n.getMonth(); cal.sel = today();
+  const n = new Date(); cal.y = n.getFullYear(); cal.m = n.getMonth(); cal.sel = today(); cal.open = false;
+  $('cal-day').classList.remove('open'); $('cal-back').classList.remove('open'); $('cal-back').onclick = closeDay;
+  if (!cal.esc) { cal.esc = 1; document.addEventListener('keydown', e => { if (e.key === 'Escape' && cal.open) closeDay(); }); }
   if (!$('ev-colors').children.length) {
     const add = (box, key, cls, label, fn) => { const b = document.createElement('button'); b.className = cls; b.title = label; b.dataset.k = key; fn(b); b.onclick = () => { cal.ev[box.dataset.w] = key; refreshEv(); }; box.appendChild(b); };
     $('ev-colors').dataset.w = 'c'; $('ev-pats').dataset.w = 'p'; $('ev-stks').dataset.w = 's';
@@ -684,13 +693,15 @@ function calInit() {
   }
   resetEv(); renderCal(); ibCard();
 }
+function openDay() { cal.open = true; $('cal-day').classList.add('open'); $('cal-back').classList.add('open'); renderCal(); }
+function closeDay() { cal.open = false; $('cal-day').classList.remove('open'); $('cal-back').classList.remove('open'); renderCal(); }
 function refreshEv() {
   document.querySelectorAll('#ev-colors button').forEach(b => b.classList.toggle('on', b.dataset.k === cal.ev.c));
   document.querySelectorAll('#ev-pats button').forEach(b => { b.classList.toggle('on', b.dataset.k === cal.ev.p); styleEv(b, cal.ev.c, b.dataset.k); });
   document.querySelectorAll('#ev-stks button').forEach(b => b.classList.toggle('on', b.dataset.k === cal.ev.s));
 }
 function resetEv() {
-  cal.edit = null; cal.ev = {c:'mist', p:'none', s:''}; $('ev-title').value = ''; $('ev-time').value = '';
+  cal.edit = null; cal.ev = {c:'mist', p:'none', s:''}; $('ev-title').value = ''; $('ev-time').value = ''; $('ev-time2').value = '';
   $('ev-save').textContent = 'Add to calendar ♡'; $('ev-cancel').hidden = true; $('msg-ev').textContent = ''; refreshEv();
 }
 function calMove(d) { cal.m += d; if (cal.m < 0) { cal.m = 11; cal.y--; } if (cal.m > 11) { cal.m = 0; cal.y++; } renderCal(); }
@@ -703,37 +714,43 @@ function renderCal() {
   for (let i = 0; i < first; i++) g.appendChild(document.createElement('div'));
   for (let d = 1; d <= days; d++) {
     const ds = cal.y + '-' + calPad(cal.m + 1) + '-' + calPad(d), b = document.createElement('button'), n = document.createElement('b');
-    b.className = 'day' + (ds === t ? ' today' : '') + (ds === cal.sel ? ' sel' : ''); n.textContent = d; b.appendChild(n);
+    b.className = 'day' + (ds === t ? ' today' : '') + (cal.open && ds === cal.sel ? ' sel' : ''); n.textContent = d; b.appendChild(n);
     const list = evs.filter(e => e.d === ds).sort((a, c) => (a.t || '').localeCompare(c.t || ''));
-    list.slice(0, 2).forEach(e => b.appendChild(evChip(e)));
-    if (list.length > 2) { const s = document.createElement('small'); s.textContent = '+' + (list.length - 2) + ' more'; b.appendChild(s); }
-    b.onclick = () => { cal.sel = ds; resetEv(); renderCal(); };
+    b.setAttribute('aria-label', ds + (list.length ? ', ' + list.length + ' event' + (list.length > 1 ? 's' : '') : ''));
+    if (list.length) {
+      const row = document.createElement('div'); row.className = 'dots';
+      list.slice(0, 3).forEach(e => row.appendChild(evDot(e)));
+      if (list.length > 3) { const s = document.createElement('small'); s.textContent = '+' + (list.length - 3); row.appendChild(s); }
+      b.appendChild(row);
+    }
+    b.onclick = () => { cal.sel = ds; resetEv(); openDay(); };
     g.appendChild(b);
   }
   renderDay();
 }
 function renderDay() {
-  const box = $('cal-events'); box.textContent = ''; $('cal-day').hidden = !cal.sel;
+  const box = $('cal-events'); box.textContent = '';
   if (!cal.sel) return;
   $('cal-day-title').textContent = new Date(cal.sel + 'T00:00:00').toLocaleDateString(undefined, {weekday:'long', month:'long', day:'numeric'});
   const list = evList().filter(e => e.d === cal.sel).sort((a, c) => (a.t || '').localeCompare(c.t || ''));
-  if (!list.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Nothing planned yet ♡'; box.appendChild(p); }
+  if (!list.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Nothing planned yet ♡ Add your first schedule below.'; box.appendChild(p); }
   list.forEach(e => {
     const r = document.createElement('div'), ed = document.createElement('button'), de = document.createElement('button'); r.className = 'evrow';
     ed.className = de.className = 'mini trash'; ed.textContent = '✎'; de.textContent = '🗑'; ed.title = 'Edit'; de.title = 'Delete';
-    ed.onclick = () => { cal.edit = e.id; cal.ev = {c:e.c, p:e.p, s:e.s || ''}; $('ev-title').value = e.n; $('ev-time').value = e.t || ''; $('ev-save').textContent = 'Save changes ♡'; $('ev-cancel').hidden = false; refreshEv(); $('ev-title').focus(); };
+    ed.onclick = () => { cal.edit = e.id; cal.ev = {c:e.c, p:e.p, s:e.s || ''}; $('ev-title').value = e.n; $('ev-time').value = e.t || ''; $('ev-time2').value = e.t2 || ''; $('ev-save').textContent = 'Save changes ♡'; $('ev-cancel').hidden = false; refreshEv(); $('ev-title').focus(); };
     de.onclick = () => { if (confirm('Delete this event? This cannot be undone.')) { save('events', evList().filter(x => x.id !== e.id)); resetEv(); renderCal(); } };
     r.append(evChip(e), ed, de); box.appendChild(r);
   });
 }
 function saveEvent() {
-  const n = $('ev-title').value.trim(), m = $('msg-ev');
+  const n = $('ev-title').value.trim(), m = $('msg-ev'), t = $('ev-time').value, t2 = $('ev-time2').value;
   if (!n) { m.textContent = 'Write the event first ♡'; return; }
+  if (t && t2 && t2 < t) { m.textContent = '"Until" should be later than "From" ♡'; return; }
   const all = evList(), e = cal.edit && all.find(x => x.id === cal.edit);
-  if (e) Object.assign(e, {n, t:$('ev-time').value, c:cal.ev.c, p:cal.ev.p, s:cal.ev.s});
-  else all.push({id:Date.now(), d:cal.sel, n, t:$('ev-time').value, c:cal.ev.c, p:cal.ev.p, s:cal.ev.s});
+  if (e) Object.assign(e, {n, t, t2, c:cal.ev.c, p:cal.ev.p, s:cal.ev.s});
+  else all.push({id:Date.now(), d:cal.sel, n, t, t2, c:cal.ev.c, p:cal.ev.p, s:cal.ev.s});
   if (!save('events', all)) { m.textContent = "Couldn't save in this browser."; return; }
-  resetEv(); $('msg-ev').textContent = 'Saved ♡'; renderCal();
+  resetEv(); renderCal(); $('msg-ev').textContent = 'Saved ♡ You can add another one for this day.';
 }
 
 // ---- Rich text (fonts, bold, italic, underline) ----
